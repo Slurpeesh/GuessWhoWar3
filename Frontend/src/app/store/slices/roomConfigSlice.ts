@@ -7,7 +7,7 @@ export interface IRoomConfigSlice {
 }
 
 const initialState: IRoomConfigSlice = {
-  value: { id: Date.now().toString(), rounds: 0, maxPlayers: 1 },
+  value: { id: Date.now().toString(), rounds: 1, maxPlayers: 1 },
 }
 
 export const roomConfigSlice = createSlice({

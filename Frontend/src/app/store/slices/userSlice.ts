@@ -1,10 +1,10 @@
-import { socket } from '@/app/socket'
 import { RootState } from '@/app/store'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface IUser {
   id: string
   name: string
+  role: 'host' | 'player' | null
 }
 
 export interface IUserSlice {
@@ -12,7 +12,7 @@ export interface IUserSlice {
 }
 
 const initialState: IUserSlice = {
-  value: { id: socket.id, name: 'Player' },
+  value: { id: '', name: 'Player', role: null },
 }
 
 export const userSlice = createSlice({
@@ -22,9 +22,15 @@ export const userSlice = createSlice({
     changeUserName: (state, payload: PayloadAction<string>) => {
       state.value.name = payload.payload
     },
+    setUserId: (state, payload: PayloadAction<string>) => {
+      state.value.id = payload.payload
+    },
+    setRole: (state, payload: PayloadAction<'host' | 'player'>) => {
+      state.value.role = payload.payload
+    },
   },
 })
 
-export const { changeUserName } = userSlice.actions
+export const { changeUserName, setUserId, setRole } = userSlice.actions
 export const selectUser = (state: RootState) => state.user.value
 export default userSlice.reducer

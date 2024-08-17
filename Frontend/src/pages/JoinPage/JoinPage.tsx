@@ -1,21 +1,17 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks/useActions'
 import { socket } from '@/app/socket'
-import { addPlayer } from '@/app/store/slices/lobbyPlayers'
-import { changeUserName } from '@/app/store/slices/userSlice'
+import { changeUserName, setRole } from '@/app/store/slices/userSlice'
 import { ChangeEvent, FormEvent, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 export default function JoinPage() {
   const user = useAppSelector((state) => state.user.value)
   const [joinRoomId, setJoinRoomId] = useState('0000000000000')
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
 
   function onSubmitHandle(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     socket.emit('joinGame', user.name, joinRoomId)
-    dispatch(addPlayer({ id: user.id, name: user.name, role: 'player' }))
-    navigate('/lobby')
+    dispatch(setRole('player'))
   }
 
   function onChangeName(e: ChangeEvent<HTMLInputElement>) {

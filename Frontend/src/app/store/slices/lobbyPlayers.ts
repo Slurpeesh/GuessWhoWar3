@@ -22,9 +22,12 @@ export const lobbyPlayersSlice = createSlice({
     addPlayer: (state, payload: PayloadAction<IPlayer>) => {
       state.value.push(payload.payload)
     },
+    setPlayers: (state, payload: PayloadAction<Array<IPlayer>>) => {
+      state.value = payload.payload
+    },
   },
 })
 
-export const { addPlayer } = lobbyPlayersSlice.actions
+export const { addPlayer, setPlayers } = lobbyPlayersSlice.actions
 export const selectLobbyPlayers = (state: RootState) => state.lobbyPlayers.value
 export default lobbyPlayersSlice.reducer
