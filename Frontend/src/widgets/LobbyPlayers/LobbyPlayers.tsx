@@ -1,6 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks/useActions'
 import { cn } from '@/app/lib/utils'
 import { socket } from '@/app/socket'
+import { setChosenUnit } from '@/app/store/slices/roundSlice'
 import { setRole } from '@/app/store/slices/userSlice'
 import {
   Tooltip,
@@ -19,10 +20,12 @@ export default function LobbyPlayers() {
   const timeoutID: MutableRefObject<ReturnType<typeof setTimeout>> =
     useRef(undefined)
   const dispatch = useAppDispatch()
+
   function onLeaveButtonHandler() {
     console.log(user.id, user.role)
     socket.emit('leaveLobby', user.id, user.role)
     dispatch(setRole(null))
+    dispatch(setChosenUnit(''))
   }
 
   function onCopyButtonClick() {
@@ -54,7 +57,8 @@ export default function LobbyPlayers() {
                 className={cn({ 'bg-green-400': player.id === user.id })}
                 key={index}
               >
-                ID:{player.id} Name:{player.name} Role:{player.role}
+                ID:{player.id} Name:{player.name} Role:{player.role} Points:
+                {player.points}
               </li>
             )
           })}

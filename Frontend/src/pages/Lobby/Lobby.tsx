@@ -38,7 +38,6 @@ export default function Lobby() {
       }
       if (roundCount.current !== null && !round.started) {
         clearInterval(roundCount.current)
-        dispatch(setRoundStarted(false))
         if (roundSound.current !== null) {
           roundSound.current.pause()
           roundSound.current = null
@@ -59,14 +58,28 @@ export default function Lobby() {
   }, [round.started])
 
   useEffect(() => {
+    const controller = new AbortController()
+    const { signal } = controller
+
     const playSoundStart = async () => {
       if (stage === 'game') {
-        await waitAndPlaySound(introSpeechAud, 2000)
-        socket.emit('getSoundForRound')
+        try {
+          await waitAndPlaySound(introSpeechAud, 2000, signal)
+          console.log('Get Sound from lobby')
+          socket.emit('getSoundForRound')
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            console.error(error)
+          }
+        }
       }
     }
 
     playSoundStart()
+
+    return () => {
+      controller.abort()
+    }
   }, [stage])
 
   function repeatSoundForRound() {

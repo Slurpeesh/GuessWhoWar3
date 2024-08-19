@@ -1,7 +1,8 @@
 import Loader from '@/entities/Loader/Loader'
-import { IPlayer, IRoomConfig, IStage } from '@/global'
+import { IGuesses, IPlayer, IRoomConfig, IStage } from '@/global'
 import Dev from '@/pages/Dev/Dev'
-import { Suspense, useEffect } from 'react'
+import { CircleAlert } from 'lucide-react'
+import { MutableRefObject, Suspense, useEffect, useRef } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from './hooks/useActions'
 import { waitAndPlaySound } from './lib/utils'
@@ -17,6 +18,7 @@ import {
 } from './store/slices/roomConfigSlice'
 import {
   setRightAnswer,
+  setRound,
   setRoundSound,
   setRoundStarted,
 } from './store/slices/roundSlice'
@@ -25,6 +27,8 @@ import { setUserId } from './store/slices/userSlice'
 
 export default function App() {
   const error = useAppSelector((state) => state.error.value)
+  const round = useAppSelector((state) => state.round.value)
+  const currentRound: MutableRefObject<number> = useRef(round.currentRound)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -107,12 +111,36 @@ export default function App() {
       dispatch(setRoundStarted(true))
     }
 
-    function onShowAnswer(rightAnswer: string) {
+    async function waitAction(timeout: number): Promise<void> {
+      return new Promise<void>((resolve, reject) => {
+        setTimeout(() => {
+          dispatch(setRightAnswer(''))
+          resolve()
+        }, timeout)
+      })
+    }
+
+    async function onRoundEnd(
+      rightAnswer: string,
+      isGameEnded: boolean,
+      guesses: Array<IGuesses>,
+      clients: Array<IPlayer>
+    ) {
       console.log(rightAnswer)
+      console.log(isGameEnded)
+      console.log(guesses)
       dispatch(setRightAnswer(rightAnswer))
-      setTimeout(() => {
-        dispatch(setRightAnswer(''))
-      }, 5000)
+      dispatch(setPlayers(clients))
+      await waitAction(5000)
+      console.log(isGameEnded)
+      if (isGameEnded) {
+        console.log('Game ended')
+      } else {
+        currentRound.current += 1
+        dispatch(setRound(currentRound.current))
+        console.log('Next round')
+        socket.emit('getSoundForRound')
+      }
     }
 
     socket.on('connect', onConnect)
@@ -127,7 +155,7 @@ export default function App() {
     socket.on('roomConfig', onRoomConfig)
     socket.on('gameStarted', onGameStarted)
     socket.on('soundForRound', onSoundForRound)
-    socket.on('showAnswer', onShowAnswer)
+    socket.on('roundEnd', onRoundEnd)
 
     socket.connect()
 
@@ -144,14 +172,16 @@ export default function App() {
       socket.off('roomConfig', onRoomConfig)
       socket.off('gameStarted', onGameStarted)
       socket.off('soundForRound', onSoundForRound)
+      socket.off('roundEnd', onRoundEnd)
     }
   }, [])
 
   return (
     <div className="w-dvw h-dvh flex bg-blue-500">
       {error.isVisible && (
-        <div className="absolute z-50 top-5 right-5 bg-red-400 p-2 rounded-lg">
-          {error.text}
+        <div className="absolute z-50 top-5 right-5 flex items-center gap-2 bg-red-400 p-2 rounded-lg">
+          <CircleAlert />
+          <p className="font-semibold">{error.text}</p>
         </div>
       )}
       <Suspense fallback={<Loader className="w-32" />}>

@@ -17,17 +17,49 @@ export function importAll(r: __WebpackModuleApi.RequireContext): {
 
 export function waitAndPlaySound(
   audio: HTMLAudioElement,
-  timeout: number = 0
+  timeout: number = 0,
+  signal?: AbortSignal
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       audio.play().catch(reject)
-      audio.onended = () => {
+
+      const onEnded = () => {
+        clearListeners()
         resolve()
       }
-      audio.onerror = (error) => {
+
+      const onError = (error: Event) => {
+        clearListeners()
         reject(error)
       }
+
+      const clearListeners = () => {
+        audio.onended = null
+        audio.onerror = null
+        signal?.removeEventListener('abort', onAbort)
+      }
+
+      const onAbort = () => {
+        clearListeners()
+        audio.pause()
+        audio.currentTime = 0
+        reject(new DOMException('Aborted', 'AbortError'))
+      }
+
+      audio.onended = onEnded
+      audio.onerror = onError
+
+      if (signal) {
+        signal.addEventListener('abort', onAbort)
+      }
     }, timeout)
+
+    if (signal) {
+      signal.addEventListener('abort', () => {
+        clearTimeout(timer)
+        reject(new DOMException('Aborted', 'AbortError'))
+      })
+    }
   })
 }

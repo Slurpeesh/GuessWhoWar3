@@ -13,6 +13,7 @@ export interface IPlayer {
   id: string
   name: string
   role: 'host' | 'player'
+  points: number
 }
 
 export interface IRound {
@@ -22,6 +23,11 @@ export interface IRound {
   started: boolean
   soundUrl: string
   rightAnswer: string
+}
+
+interface IGuesses {
+  socketId: string
+  isCorrect: boolean | null
 }
 
 export type IStage = 'init' | 'lobby' | 'game'

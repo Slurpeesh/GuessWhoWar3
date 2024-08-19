@@ -1,4 +1,4 @@
-import { IPlayer, IRoomConfig, IStage } from '@/global'
+import { IGuesses, IPlayer, IRoomConfig, IStage } from '@/global'
 
 export interface ServerToClientEvents {
   message: (msg: string) => void
@@ -11,7 +11,12 @@ export interface ServerToClientEvents {
   roomConfig: (roomConfig: IRoomConfig) => void
   gameStarted: () => void
   soundForRound: (sound: Buffer) => void
-  showAnswer: (rightAnswer: string) => void
+  roundEnd: (
+    rightAnswer: string,
+    isGameEnded: boolean,
+    resultsForClients: Array<IGuesses>,
+    clients: Array<IPlayer>
+  ) => void
 }
 
 export interface ClientToServerEvents {

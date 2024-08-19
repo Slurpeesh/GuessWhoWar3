@@ -5,6 +5,7 @@ interface IPlayer {
   id: string
   name: string
   role: 'host' | 'player'
+  points: number
 }
 
 export interface ILobbyPlayersSlice {

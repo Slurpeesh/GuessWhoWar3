@@ -4,6 +4,7 @@ interface IGuesses {
 }
 
 interface IRound {
+  value: number
   sound: string
   answer: string
   guesses: Array<IGuesses>
@@ -27,6 +28,7 @@ export interface IPlayer {
   name: string
   role: 'host' | 'player'
   isSynced: boolean
+  points: number
 }
 
 export type IStage = 'init' | 'lobby' | 'game'
@@ -42,7 +44,12 @@ export interface ServerToClientEvents {
   roomConfig: (roomConfig: IRoomConfig) => void
   gameStarted: () => void
   soundForRound: (sound: Buffer) => void
-  showAnswer: (rightAnswer: string) => void
+  roundEnd: (
+    rightAnswer: string,
+    isGameEnded: boolean,
+    resultsForClients: Array<IGuesses>,
+    clients: Array<IPlayer>
+  ) => void
 }
 
 export interface ClientToServerEvents {

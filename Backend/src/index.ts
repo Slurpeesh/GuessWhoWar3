@@ -54,11 +54,14 @@ io.on('connection', (socket) => {
       socket.emit('roomExists')
     } else {
       rooms.set(roomConfig.id, {
-        clients: [{ id: socket.id, name, role: 'host', isSynced: true }],
+        clients: [
+          { id: socket.id, name, role: 'host', isSynced: true, points: 0 },
+        ],
         rounds: roomConfig.rounds,
         maxPlayers: roomConfig.maxPlayers,
         isGameStarted: false,
         currentRound: {
+          value: 1,
           sound: '',
           answer: '',
           guesses: [{ socketId: socket.id, isCorrect: null }],
@@ -87,7 +90,13 @@ io.on('connection', (socket) => {
         return
       }
       const rounds = room.rounds
-      clients.push({ id: socket.id, name, role: 'player', isSynced: true })
+      clients.push({
+        id: socket.id,
+        name,
+        role: 'player',
+        isSynced: true,
+        points: 0,
+      })
       guesses.push({ socketId: socket.id, isCorrect: null })
       socket.data.room = roomId
       socket.join(roomId)
@@ -126,6 +135,9 @@ io.on('connection', (socket) => {
 
   socket.on('getSoundForRound', async () => {
     const roomId = socket.data.room
+    if (!rooms.has(roomId)) {
+      return
+    }
     let audioFilePath: string
     if (rooms.get(roomId)!.currentRound.sound) {
       audioFilePath = rooms.get(roomId)!.currentRound.sound
@@ -159,26 +171,31 @@ io.on('connection', (socket) => {
 
   socket.on('roundAnswer', (answer: string) => {
     const roomId = socket.data.room
-    const rightAnswer = rooms.get(roomId)!.currentRound.answer
-    //FIXME: pay attention one line below!!! Backend and Frontend are linked with this path probably...
-    // console.log(rooms.get(roomId)!.currentRound.sound)
-    // console.log(rightAnswer)
-    // console.log(answer)
     const room = rooms.get(roomId) as IRoomsMapValue
+    const rightAnswer = room.currentRound.answer
     const clients = room.clients
+    const client = clients.find((client) => client.id === socket.id)
     const guesses = room.currentRound.guesses
+
+    if (!client) {
+      console.error(`Client with id ${socket.id} not found in room ${roomId}`)
+      return
+    }
     for (const guess of guesses) {
       if (guess.socketId === socket.id) {
         guess.isCorrect = answer.includes(rightAnswer)
+        if (guess.isCorrect) {
+          client.points += 1
+        }
       }
     }
-    const client = clients.filter((client) => client.id === socket.id)[0]
     setClientSynced(client)
     if (areClientsSynced(clients)) {
-      for (const guess of guesses) {
-        console.log('Answer for', guess.socketId, 'is:', guess.isCorrect)
-        io.to(roomId).emit('showAnswer', rightAnswer)
-      }
+      room.currentRound.sound = ''
+      const isGameEnded = room.currentRound.value === room.rounds
+      io.to(roomId).emit('roundEnd', rightAnswer, isGameEnded, guesses, clients)
+      room.currentRound.value += 1
+      setClientsUnsynced(clients)
     }
   })
 })
