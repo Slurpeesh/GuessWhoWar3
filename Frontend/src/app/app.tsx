@@ -15,7 +15,11 @@ import {
   setRoomMaxPlayers,
   setRoomRounds,
 } from './store/slices/roomConfigSlice'
-import { setRoundSound, setRoundStarted } from './store/slices/roundSlice'
+import {
+  setRightAnswer,
+  setRoundSound,
+  setRoundStarted,
+} from './store/slices/roundSlice'
 import { setStage } from './store/slices/stageSlice'
 import { setUserId } from './store/slices/userSlice'
 
@@ -70,6 +74,13 @@ export default function App() {
       }, 2000)
     }
 
+    function onGameAlreadyStarted() {
+      dispatch(showError('Game already started'))
+      setTimeout(() => {
+        dispatch(hideError())
+      }, 2000)
+    }
+
     function onRoomIsFull() {
       dispatch(showError('Room is full'))
       setTimeout(() => {
@@ -96,6 +107,14 @@ export default function App() {
       dispatch(setRoundStarted(true))
     }
 
+    function onShowAnswer(rightAnswer: string) {
+      console.log(rightAnswer)
+      dispatch(setRightAnswer(rightAnswer))
+      setTimeout(() => {
+        dispatch(setRightAnswer(''))
+      }, 5000)
+    }
+
     socket.on('connect', onConnect)
     socket.on('disconnect', onDisconnect)
     socket.on('message', onMessage)
@@ -103,10 +122,12 @@ export default function App() {
     socket.on('stageConfirm', onStageConfirm)
     socket.on('roomExists', onRoomExists)
     socket.on('noSuchRoom', onNoSuchRoom)
+    socket.on('gameAlreadyStarted', onGameAlreadyStarted)
     socket.on('roomIsFull', onRoomIsFull)
     socket.on('roomConfig', onRoomConfig)
     socket.on('gameStarted', onGameStarted)
     socket.on('soundForRound', onSoundForRound)
+    socket.on('showAnswer', onShowAnswer)
 
     socket.connect()
 
@@ -118,7 +139,9 @@ export default function App() {
       socket.off('stageConfirm', onStageConfirm)
       socket.off('roomExists', onRoomExists)
       socket.off('noSuchRoom', onNoSuchRoom)
+      socket.off('gameAlreadyStarted', onGameAlreadyStarted)
       socket.off('roomIsFull', onRoomIsFull)
+      socket.off('roomConfig', onRoomConfig)
       socket.off('gameStarted', onGameStarted)
       socket.off('soundForRound', onSoundForRound)
     }

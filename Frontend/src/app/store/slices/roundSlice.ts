@@ -14,6 +14,7 @@ const initialState: IRoundSlice = {
     timeLeft: 5,
     started: false,
     soundUrl: null,
+    rightAnswer: '',
   },
 }
 
@@ -36,6 +37,9 @@ export const roundSlice = createSlice({
     setRoundSound: (state, payload: PayloadAction<string>) => {
       state.value.soundUrl = payload.payload
     },
+    setRightAnswer: (state, payload: PayloadAction<string>) => {
+      state.value.rightAnswer = payload.payload
+    },
   },
 })
 
@@ -45,6 +49,7 @@ export const {
   setTimeLeft,
   setRoundStarted,
   setRoundSound,
+  setRightAnswer,
 } = roundSlice.actions
 export const selectRound = (state: RootState) => state.round.value
 export default roundSlice.reducer

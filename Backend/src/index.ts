@@ -4,6 +4,11 @@ import path from 'path'
 import { Server } from 'socket.io'
 import { getAudioFiles } from './soundsSrcs'
 import {
+  areClientsSynced,
+  setClientsUnsynced,
+  setClientSynced,
+} from './syncRoom'
+import {
   ClientToServerEvents,
   InterServerEvents,
   IRoomsMapValue,
@@ -49,10 +54,15 @@ io.on('connection', (socket) => {
       socket.emit('roomExists')
     } else {
       rooms.set(roomConfig.id, {
-        clients: [{ id: socket.id, name, role: 'host' }],
+        clients: [{ id: socket.id, name, role: 'host', isSynced: true }],
         rounds: roomConfig.rounds,
         maxPlayers: roomConfig.maxPlayers,
-        currentRound: { sound: '', answer: '' },
+        isGameStarted: false,
+        currentRound: {
+          sound: '',
+          answer: '',
+          guesses: [{ socketId: socket.id, isCorrect: null }],
+        },
       })
       socket.data.room = roomConfig.id
       const clients = rooms.get(roomConfig.id)!.clients
@@ -65,16 +75,20 @@ io.on('connection', (socket) => {
   socket.on('joinGame', (name: string, roomId) => {
     if (!rooms.has(roomId)) {
       socket.emit('noSuchRoom')
+    } else if (rooms.get(roomId)!.isGameStarted) {
+      socket.emit('gameAlreadyStarted')
     } else {
       const room = rooms.get(roomId) as IRoomsMapValue
       const clients = room.clients
+      const guesses = room.currentRound.guesses
       const maxPlayers = room.maxPlayers
       if (clients.length === maxPlayers) {
         socket.emit('roomIsFull')
         return
       }
       const rounds = room.rounds
-      clients.push({ id: socket.id, name, role: 'player' })
+      clients.push({ id: socket.id, name, role: 'player', isSynced: true })
+      guesses.push({ socketId: socket.id, isCorrect: null })
       socket.data.room = roomId
       socket.join(roomId)
       io.to(roomId).emit('playerData', clients)
@@ -104,6 +118,9 @@ io.on('connection', (socket) => {
 
   socket.on('startGame', () => {
     const roomId = socket.data.room
+    const clients = rooms.get(roomId)!.clients
+    rooms.get(roomId)!.isGameStarted = true
+    setClientsUnsynced(clients)
     io.to(roomId).emit('gameStarted')
   })
 
@@ -124,14 +141,20 @@ io.on('connection', (socket) => {
       audioFilePath = path.join(directoryPath, sound)
       rooms.get(roomId)!.currentRound.sound = audioFilePath
     }
+    const clients = rooms.get(roomId)!.clients
+    const client = clients.filter((client) => client.id === socket.id)[0]
+    setClientSynced(client)
 
-    fs.readFile(audioFilePath, (err, data) => {
-      if (err) {
-        console.error('Error reading file:', err)
-        return
-      }
-      io.to(roomId).emit('soundForRound', data)
-    })
+    if (areClientsSynced(clients)) {
+      fs.readFile(audioFilePath, (err, data) => {
+        if (err) {
+          console.error('Error reading file:', err)
+          return
+        }
+        io.to(roomId).emit('soundForRound', data)
+        setClientsUnsynced(clients)
+      })
+    }
   })
 
   socket.on('roundAnswer', (answer: string) => {
@@ -141,7 +164,22 @@ io.on('connection', (socket) => {
     // console.log(rooms.get(roomId)!.currentRound.sound)
     // console.log(rightAnswer)
     // console.log(answer)
-    console.log('Answer for', socket.id, 'is:', answer.includes(rightAnswer))
+    const room = rooms.get(roomId) as IRoomsMapValue
+    const clients = room.clients
+    const guesses = room.currentRound.guesses
+    for (const guess of guesses) {
+      if (guess.socketId === socket.id) {
+        guess.isCorrect = answer.includes(rightAnswer)
+      }
+    }
+    const client = clients.filter((client) => client.id === socket.id)[0]
+    setClientSynced(client)
+    if (areClientsSynced(clients)) {
+      for (const guess of guesses) {
+        console.log('Answer for', guess.socketId, 'is:', guess.isCorrect)
+        io.to(roomId).emit('showAnswer', rightAnswer)
+      }
+    }
   })
 })
 

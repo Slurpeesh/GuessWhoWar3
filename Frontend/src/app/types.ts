@@ -6,10 +6,12 @@ export interface ServerToClientEvents {
   stageConfirm: (stage: IStage) => void
   roomExists: () => void
   noSuchRoom: () => void
+  gameAlreadyStarted: () => void
   roomIsFull: () => void
   roomConfig: (roomConfig: IRoomConfig) => void
   gameStarted: () => void
   soundForRound: (sound: Buffer) => void
+  showAnswer: (rightAnswer: string) => void
 }
 
 export interface ClientToServerEvents {
