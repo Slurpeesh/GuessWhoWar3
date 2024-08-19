@@ -6,8 +6,15 @@ export interface IRoundSlice {
   value: IRound
 }
 
+//FIXME: change timeLeft to >= 20
 const initialState: IRoundSlice = {
-  value: { currentRound: 1, chosenUnit: '', timeLeft: 15 },
+  value: {
+    currentRound: 1,
+    chosenUnit: '',
+    timeLeft: 5,
+    started: false,
+    soundUrl: null,
+  },
 }
 
 export const roundSlice = createSlice({
@@ -23,9 +30,21 @@ export const roundSlice = createSlice({
     setTimeLeft: (state, payload: PayloadAction<number>) => {
       state.value.timeLeft = payload.payload
     },
+    setRoundStarted: (state, payload: PayloadAction<boolean>) => {
+      state.value.started = payload.payload
+    },
+    setRoundSound: (state, payload: PayloadAction<string>) => {
+      state.value.soundUrl = payload.payload
+    },
   },
 })
 
-export const { setRound, setChosenUnit, setTimeLeft } = roundSlice.actions
+export const {
+  setRound,
+  setChosenUnit,
+  setTimeLeft,
+  setRoundStarted,
+  setRoundSound,
+} = roundSlice.actions
 export const selectRound = (state: RootState) => state.round.value
 export default roundSlice.reducer

@@ -32,19 +32,6 @@ export default function EntryPage() {
         >
           Join lobby
         </NavLink>
-        <NavLink
-          className={({ isActive }) => {
-            return [
-              'p-2 rounded-lg text-slate-200 w-52 text-center',
-              isActive
-                ? 'bg-blue-700'
-                : 'bg-blue-900 hover:bg-blue-700 transition-colors',
-            ].join(' ')
-          }}
-          to="/dev"
-        >
-          Socket Management (Dev)
-        </NavLink>
       </div>
       <div className="relative basis-2/3 bg-blue-500 flex flex-col justify-center items-center">
         <Suspense fallback={<Loader className="w-32" />}>

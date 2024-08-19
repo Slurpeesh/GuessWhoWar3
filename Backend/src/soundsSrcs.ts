@@ -1,17 +1,24 @@
 import fs from 'fs'
+import path from 'path'
 
-export function getAudioFiles(dir: string): Promise<string[]> {
-  return new Promise((resolve, reject) => {
-    fs.readdir(dir, (err, files) => {
-      if (err) {
-        return reject(err)
+export async function getAudioFiles(dir: string): Promise<string[]> {
+  let audioFiles: string[] = []
+
+  async function readDirRecursively(currentDir: string) {
+    const files = await fs.promises.readdir(currentDir, { withFileTypes: true })
+
+    for (const file of files) {
+      const filePath = path.join(currentDir, file.name)
+      if (file.isDirectory()) {
+        await readDirRecursively(filePath)
+      } else if (/\.mp3$/i.test(file.name)) {
+        const relativeFilePath = path.relative(dir, filePath)
+        audioFiles.push(relativeFilePath)
       }
+    }
+  }
 
-      const audioFiles = files.filter((file) => {
-        return /\.(mp3|wav|ogg)$/i.test(file)
-      })
+  await readDirRecursively(dir)
 
-      resolve(audioFiles)
-    })
-  })
+  return audioFiles
 }

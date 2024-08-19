@@ -14,6 +14,7 @@ import { MutableRefObject, useRef, useState } from 'react'
 export default function LobbyPlayers() {
   const user = useAppSelector((state) => state.user.value)
   const roomConfig = useAppSelector((state) => state.roomConfig.value)
+  const stage = useAppSelector((state) => state.stage.value)
   const [copied, setCopied] = useState(false)
   const timeoutID: MutableRefObject<ReturnType<typeof setTimeout>> =
     useRef(undefined)
@@ -59,7 +60,7 @@ export default function LobbyPlayers() {
           })}
         </ul>
       </div>
-      {user.role === 'host' && (
+      {user.role === 'host' && stage === 'lobby' && (
         <button
           className="bg-green-800 p-2 text-slate-200 rounded-lg"
           onClick={() => onStart()}

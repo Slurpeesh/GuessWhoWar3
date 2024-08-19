@@ -1,3 +1,4 @@
+import fs from 'fs'
 import { createServer } from 'http'
 import path from 'path'
 import { Server } from 'socket.io'
@@ -12,13 +13,7 @@ import {
 
 const directoryPath = path.join(__dirname, '../assets/sounds/')
 
-getAudioFiles(directoryPath)
-  .then((audioFiles) => {
-    console.log('Audio files:', audioFiles)
-  })
-  .catch((error) => {
-    console.error('Error reading directory:', error)
-  })
+const audioFiles = getAudioFiles(directoryPath)
 
 const httpServer = createServer((req, res) => {
   if (req.url === '/healthz') {
@@ -57,6 +52,7 @@ io.on('connection', (socket) => {
         clients: [{ id: socket.id, name, role: 'host' }],
         rounds: roomConfig.rounds,
         maxPlayers: roomConfig.maxPlayers,
+        currentRound: { sound: '', answer: '' },
       })
       socket.data.room = roomConfig.id
       const clients = rooms.get(roomConfig.id)!.clients
@@ -111,8 +107,41 @@ io.on('connection', (socket) => {
     io.to(roomId).emit('gameStarted')
   })
 
-  socket.on('getSoundForRound', () => {
-    console.log('Sound for round')
+  socket.on('getSoundForRound', async () => {
+    const roomId = socket.data.room
+    let audioFilePath: string
+    if (rooms.get(roomId)!.currentRound.sound) {
+      audioFilePath = rooms.get(roomId)!.currentRound.sound
+    } else {
+      const sounds = await audioFiles
+      const sound = sounds[Math.floor(Math.random() * sounds.length)]
+      const match = sound.match(/([^\d\\]*)\d+\.mp3$/)
+      if (match) {
+        rooms.get(roomId)!.currentRound.answer = match[1]
+      } else {
+        throw Error('Wrong mp3 name')
+      }
+      audioFilePath = path.join(directoryPath, sound)
+      rooms.get(roomId)!.currentRound.sound = audioFilePath
+    }
+
+    fs.readFile(audioFilePath, (err, data) => {
+      if (err) {
+        console.error('Error reading file:', err)
+        return
+      }
+      io.to(roomId).emit('soundForRound', data)
+    })
+  })
+
+  socket.on('roundAnswer', (answer: string) => {
+    const roomId = socket.data.room
+    const rightAnswer = rooms.get(roomId)!.currentRound.answer
+    //FIXME: pay attention one line below!!! Backend and Frontend are linked with this path probably...
+    // console.log(rooms.get(roomId)!.currentRound.sound)
+    // console.log(rightAnswer)
+    // console.log(answer)
+    console.log('Answer for', socket.id, 'is:', answer.includes(rightAnswer))
   })
 })
 

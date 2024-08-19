@@ -1,6 +1,5 @@
 import '@/index.css'
 
-import Dev from '@/pages/Dev/Dev'
 import EntryPage from '@/pages/EntryPage/EntryPage'
 import ErrorPage from '@/pages/ErrorPage/ErrorPage'
 import LazyHostPage from '@/pages/HostPage/HostPage.lazy'
@@ -42,10 +41,6 @@ const router = createBrowserRouter([
           {
             path: '/join',
             element: <LazyJoinPage />,
-          },
-          {
-            path: '/dev',
-            element: <Dev />,
           },
         ],
       },

@@ -1,7 +1,12 @@
+interface IRound {
+  sound: string
+  answer: string
+}
 export interface IRoomsMapValue {
   clients: Array<IPlayer>
   rounds: number
   maxPlayers: number
+  currentRound: IRound
 }
 
 export interface IRoomConfig {
@@ -27,6 +32,7 @@ export interface ServerToClientEvents {
   roomIsFull: () => void
   roomConfig: (roomConfig: IRoomConfig) => void
   gameStarted: () => void
+  soundForRound: (sound: Buffer) => void
 }
 
 export interface ClientToServerEvents {
@@ -36,6 +42,7 @@ export interface ClientToServerEvents {
   leaveLobby: (userId: string, role: 'host' | 'player') => void
   startGame: () => void
   getSoundForRound: () => void
+  roundAnswer: (answer: string) => void
 }
 
 export interface InterServerEvents {}

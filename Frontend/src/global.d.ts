@@ -19,6 +19,8 @@ export interface IRound {
   currentRound: number
   chosenUnit: string
   timeLeft: number
+  started: boolean
+  soundUrl: string
 }
 
 export type IStage = 'init' | 'lobby' | 'game'

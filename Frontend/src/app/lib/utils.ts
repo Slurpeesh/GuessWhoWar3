@@ -17,17 +17,17 @@ export function importAll(r: __WebpackModuleApi.RequireContext): {
 
 export function waitAndPlaySound(
   audio: HTMLAudioElement,
-  timeout: number
+  timeout: number = 0
 ): Promise<void> {
-  return new Promise<void>((resolve) => {
-    const audTime = audio.duration * 1000
-
+  return new Promise<void>((resolve, reject) => {
     setTimeout(() => {
-      audio.play()
+      audio.play().catch(reject)
+      audio.onended = () => {
+        resolve()
+      }
+      audio.onerror = (error) => {
+        reject(error)
+      }
     }, timeout)
-
-    setTimeout(() => {
-      resolve()
-    }, audTime + timeout)
   })
 }

@@ -1,8 +1,10 @@
 import Loader from '@/entities/Loader/Loader'
 import { IPlayer, IRoomConfig, IStage } from '@/global'
+import Dev from '@/pages/Dev/Dev'
 import { Suspense, useEffect } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from './hooks/useActions'
+import { waitAndPlaySound } from './lib/utils'
 import { socket } from './socket'
 import { hideError, showError } from './store/slices/errorSlice'
 import { setConnected } from './store/slices/isConnectedSlice'
@@ -13,6 +15,7 @@ import {
   setRoomMaxPlayers,
   setRoomRounds,
 } from './store/slices/roomConfigSlice'
+import { setRoundSound, setRoundStarted } from './store/slices/roundSlice'
 import { setStage } from './store/slices/stageSlice'
 import { setUserId } from './store/slices/userSlice'
 
@@ -84,6 +87,15 @@ export default function App() {
       dispatch(setStage('game'))
     }
 
+    async function onSoundForRound(sound: Buffer) {
+      const audioBlob = new Blob([sound], { type: 'audio/mp3' })
+      const audioUrl = URL.createObjectURL(audioBlob)
+      const audio = new Audio(audioUrl)
+      await waitAndPlaySound(audio, 2000)
+      dispatch(setRoundSound(audioUrl))
+      dispatch(setRoundStarted(true))
+    }
+
     socket.on('connect', onConnect)
     socket.on('disconnect', onDisconnect)
     socket.on('message', onMessage)
@@ -94,6 +106,7 @@ export default function App() {
     socket.on('roomIsFull', onRoomIsFull)
     socket.on('roomConfig', onRoomConfig)
     socket.on('gameStarted', onGameStarted)
+    socket.on('soundForRound', onSoundForRound)
 
     socket.connect()
 
@@ -107,6 +120,7 @@ export default function App() {
       socket.off('noSuchRoom', onNoSuchRoom)
       socket.off('roomIsFull', onRoomIsFull)
       socket.off('gameStarted', onGameStarted)
+      socket.off('soundForRound', onSoundForRound)
     }
   }, [])
 
@@ -120,6 +134,7 @@ export default function App() {
       <Suspense fallback={<Loader className="w-32" />}>
         <Outlet />
       </Suspense>
+      {process.env.NODE_ENV === 'development' && <Dev />}
     </div>
   )
 }
