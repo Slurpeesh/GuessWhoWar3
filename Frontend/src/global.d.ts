@@ -30,4 +30,4 @@ interface IGuesses {
   isCorrect: boolean | null
 }
 
-export type IStage = 'init' | 'lobby' | 'game'
+export type IStage = 'init' | 'lobby' | 'game' | 'results'

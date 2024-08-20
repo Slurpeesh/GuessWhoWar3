@@ -16,13 +16,13 @@ export default function LobbyPlayers() {
   const user = useAppSelector((state) => state.user.value)
   const roomConfig = useAppSelector((state) => state.roomConfig.value)
   const stage = useAppSelector((state) => state.stage.value)
+  const lobbyPlayers = useAppSelector((state) => state.lobbyPlayers.value)
   const [copied, setCopied] = useState(false)
   const timeoutID: MutableRefObject<ReturnType<typeof setTimeout>> =
     useRef(undefined)
   const dispatch = useAppDispatch()
 
   function onLeaveButtonHandler() {
-    console.log(user.id, user.role)
     socket.emit('leaveLobby', user.id, user.role)
     dispatch(setRole(null))
     dispatch(setChosenUnit(''))
@@ -40,7 +40,11 @@ export default function LobbyPlayers() {
   function onStart() {
     socket.emit('startGame')
   }
-  const lobbyPlayers = useAppSelector((state) => state.lobbyPlayers.value)
+
+  function onToLobby() {
+    socket.emit('toLobby')
+  }
+
   return (
     <>
       <button
@@ -51,10 +55,23 @@ export default function LobbyPlayers() {
       </button>
       <div className="bg-blue-200 flex flex-col justify-center items-center">
         <ul>
-          {lobbyPlayers.map((player, index) => {
+          {lobbyPlayers.map((player, index, arr) => {
+            const pointsOfPlayer = player.points
+            let isWinner: boolean = true
+            for (let i = 0; i < arr.length; i++) {
+              if (pointsOfPlayer < arr[i].points) {
+                isWinner = false
+              }
+            }
             return (
               <li
-                className={cn({ 'bg-green-400': player.id === user.id })}
+                className={cn({
+                  'bg-green-400': player.id === user.id,
+                  'ring-2 ring-yellow-500 bg-gradient-to-br from-green-400 to-yellow-500':
+                    isWinner && stage === 'results' && player.id === socket.id,
+                  'ring-2 ring-yellow-500 bg-gradient-to-br from-blue-200 to-yellow-500':
+                    isWinner && stage === 'results' && player.id !== socket.id,
+                })}
                 key={index}
               >
                 ID:{player.id} Name:{player.name} Role:{player.role} Points:
@@ -72,22 +89,32 @@ export default function LobbyPlayers() {
           Start
         </button>
       )}
-      <TooltipProvider>
-        <Tooltip open={copied ? true : undefined}>
-          <TooltipTrigger asChild>
-            <button
-              className="rounded-md p-1 bg-blue-200 flex justify-center items-center gap-2 font-bold"
-              onClick={() => onCopyButtonClick()}
-            >
-              <p className="uppercase">Share: {roomConfig.id}</p>
-              {copied ? <CopyCheck /> : <Copy />}
-            </button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <div>{copied ? 'Copied!' : 'Copy'}</div>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      {user.role === 'host' && stage === 'results' && (
+        <button
+          className="bg-green-800 p-2 text-slate-200 rounded-lg"
+          onClick={() => onToLobby()}
+        >
+          To lobby
+        </button>
+      )}
+      {user.role === 'host' && stage === 'lobby' && (
+        <TooltipProvider>
+          <Tooltip open={copied ? true : undefined}>
+            <TooltipTrigger asChild>
+              <button
+                className="rounded-md p-1 bg-blue-200 flex justify-center items-center gap-2 font-bold"
+                onClick={() => onCopyButtonClick()}
+              >
+                <p className="uppercase">Share: {roomConfig.id}</p>
+                {copied ? <CopyCheck /> : <Copy />}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <div>{copied ? 'Copied!' : 'Copy'}</div>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
     </>
   )
 }

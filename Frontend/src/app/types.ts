@@ -17,6 +17,7 @@ export interface ServerToClientEvents {
     resultsForClients: Array<IGuesses>,
     clients: Array<IPlayer>
   ) => void
+  transferToLobby: () => void
 }
 
 export interface ClientToServerEvents {
@@ -27,4 +28,5 @@ export interface ClientToServerEvents {
   startGame: () => void
   getSoundForRound: () => void
   roundAnswer: (answer: string) => void
+  toLobby: () => void
 }

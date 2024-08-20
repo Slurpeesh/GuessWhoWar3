@@ -105,7 +105,7 @@ export default function Lobby() {
           </button>
         </>
       )}
-      <div>Round: {round.currentRound}</div>
+      {stage === 'game' && <div>Round: {round.currentRound}</div>}
       {lobbyPlayers.length !== 0 && <LobbyPlayers />}
       {stage === 'game' && <UnitToggleGroup />}
     </div>

@@ -5,11 +5,12 @@ import { CircleAlert } from 'lucide-react'
 import { MutableRefObject, Suspense, useEffect, useRef } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from './hooks/useActions'
+import announceSounds from './lib/announceSounds'
 import { waitAndPlaySound } from './lib/utils'
 import { socket } from './socket'
 import { hideError, showError } from './store/slices/errorSlice'
 import { setConnected } from './store/slices/isConnectedSlice'
-import { setPlayers } from './store/slices/lobbyPlayers'
+import { setNullifyPoints, setPlayers } from './store/slices/lobbyPlayers'
 import { addMessage } from './store/slices/messagesSlice'
 import {
   setRoomId,
@@ -25,9 +26,12 @@ import {
 import { setStage } from './store/slices/stageSlice'
 import { setUserId } from './store/slices/userSlice'
 
+const endAud = new Audio(announceSounds['end.mp3'])
+
 export default function App() {
   const error = useAppSelector((state) => state.error.value)
   const round = useAppSelector((state) => state.round.value)
+  const lobbyPlayers = useAppSelector((state) => state.lobbyPlayers.value)
   const currentRound: MutableRefObject<number> = useRef(round.currentRound)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -102,6 +106,7 @@ export default function App() {
       dispatch(setStage('game'))
     }
 
+    //FIXME: need abort controller
     async function onSoundForRound(sound: Buffer) {
       const audioBlob = new Blob([sound], { type: 'audio/mp3' })
       const audioUrl = URL.createObjectURL(audioBlob)
@@ -126,21 +131,23 @@ export default function App() {
       guesses: Array<IGuesses>,
       clients: Array<IPlayer>
     ) {
-      console.log(rightAnswer)
-      console.log(isGameEnded)
-      console.log(guesses)
       dispatch(setRightAnswer(rightAnswer))
       dispatch(setPlayers(clients))
       await waitAction(5000)
-      console.log(isGameEnded)
       if (isGameEnded) {
-        console.log('Game ended')
+        dispatch(setStage('results'))
+        dispatch(setRound(1))
+        await waitAndPlaySound(endAud, 1000)
       } else {
         currentRound.current += 1
         dispatch(setRound(currentRound.current))
-        console.log('Next round')
         socket.emit('getSoundForRound')
       }
+    }
+
+    function onTransferToLobby() {
+      dispatch(setNullifyPoints())
+      dispatch(setStage('lobby'))
     }
 
     socket.on('connect', onConnect)
@@ -156,6 +163,7 @@ export default function App() {
     socket.on('gameStarted', onGameStarted)
     socket.on('soundForRound', onSoundForRound)
     socket.on('roundEnd', onRoundEnd)
+    socket.on('transferToLobby', onTransferToLobby)
 
     socket.connect()
 
@@ -173,6 +181,7 @@ export default function App() {
       socket.off('gameStarted', onGameStarted)
       socket.off('soundForRound', onSoundForRound)
       socket.off('roundEnd', onRoundEnd)
+      socket.off('transferToLobby', onTransferToLobby)
     }
   }, [])
 

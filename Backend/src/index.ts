@@ -126,14 +126,16 @@ io.on('connection', (socket) => {
   })
 
   socket.on('startGame', () => {
+    console.log('Start game')
     const roomId = socket.data.room
     const clients = rooms.get(roomId)!.clients
     rooms.get(roomId)!.isGameStarted = true
     setClientsUnsynced(clients)
-    io.to(roomId).emit('gameStarted')
+    io.to(roomId).emit('gameStarted', clients)
   })
 
   socket.on('getSoundForRound', async () => {
+    console.log('Get sound for round')
     const roomId = socket.data.room
     if (!rooms.has(roomId)) {
       return
@@ -170,6 +172,7 @@ io.on('connection', (socket) => {
   })
 
   socket.on('roundAnswer', (answer: string) => {
+    console.log('Getting answer for round')
     const roomId = socket.data.room
     const room = rooms.get(roomId) as IRoomsMapValue
     const rightAnswer = room.currentRound.answer
@@ -194,9 +197,19 @@ io.on('connection', (socket) => {
       room.currentRound.sound = ''
       const isGameEnded = room.currentRound.value === room.rounds
       io.to(roomId).emit('roundEnd', rightAnswer, isGameEnded, guesses, clients)
-      room.currentRound.value += 1
       setClientsUnsynced(clients)
+      room.currentRound.value += 1
     }
+  })
+
+  socket.on('toLobby', () => {
+    const roomId = socket.data.room
+    const room = rooms.get(roomId) as IRoomsMapValue
+    const clients = room.clients
+    room.isGameStarted = false
+    room.currentRound.value = 1
+    clients.forEach((client) => (client.points = 0))
+    io.to(roomId).emit('transferToLobby')
   })
 })
 

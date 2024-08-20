@@ -42,7 +42,7 @@ export interface ServerToClientEvents {
   gameAlreadyStarted: () => void
   roomIsFull: () => void
   roomConfig: (roomConfig: IRoomConfig) => void
-  gameStarted: () => void
+  gameStarted: (clients: Array<IPlayer>) => void
   soundForRound: (sound: Buffer) => void
   roundEnd: (
     rightAnswer: string,
@@ -50,6 +50,7 @@ export interface ServerToClientEvents {
     resultsForClients: Array<IGuesses>,
     clients: Array<IPlayer>
   ) => void
+  transferToLobby: () => void
 }
 
 export interface ClientToServerEvents {
@@ -60,6 +61,7 @@ export interface ClientToServerEvents {
   startGame: () => void
   getSoundForRound: () => void
   roundAnswer: (answer: string) => void
+  toLobby: () => void
 }
 
 export interface InterServerEvents {}
