@@ -110,7 +110,7 @@ export default function HostPage() {
             id="rounds"
             type="text"
             value={roomConfig.rounds}
-            maxLength={3}
+            maxLength={2}
             onChange={(e) => onChangeRounds(e)}
           />
           <label className="content-center" htmlFor="maxPlayers">
@@ -121,7 +121,7 @@ export default function HostPage() {
             id="maxPlayers"
             type="text"
             value={roomConfig.maxPlayers}
-            maxLength={3}
+            maxLength={2}
             onChange={(e) => onChangeMaxPlayers(e)}
           />
         </div>

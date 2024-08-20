@@ -39,7 +39,7 @@ export default function App() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    let soundForRoundController: AbortController
+    let soundForRoundController: AbortController = null
     function onConnect() {
       dispatch(setConnected(true))
       dispatch(setUserId(socket.id))
@@ -57,9 +57,12 @@ export default function App() {
     function onPlayerData(players: Array<IPlayer>) {
       dispatch(setPlayers(players))
       if (players.length === 0) {
-        soundForRoundController.abort()
+        if (soundForRoundController !== null) {
+          soundForRoundController.abort()
+        }
         dispatch(setStage('init'))
         dispatch(setRoundInit())
+        currentRound.current = 1
         navigate('/')
       }
     }
@@ -173,6 +176,8 @@ export default function App() {
 
     function onTransferToLobby() {
       dispatch(setNullifyPoints())
+      dispatch(setRoundInit())
+      currentRound.current = 1
       dispatch(setStage('lobby'))
     }
 

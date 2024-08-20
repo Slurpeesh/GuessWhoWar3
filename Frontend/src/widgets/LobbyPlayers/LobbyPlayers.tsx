@@ -113,7 +113,7 @@ export default function LobbyPlayers() {
           To lobby
         </button>
       )}
-      {user.role === 'host' && stage === 'lobby' && (
+      {stage === 'lobby' && (
         <TooltipProvider>
           <Tooltip open={copied ? true : undefined}>
             <TooltipTrigger asChild>
