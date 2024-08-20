@@ -36,7 +36,7 @@ export default function Lobby() {
           }
         }, 1000)
       }
-      if (roundCount.current !== null && !round.started) {
+      if (roundCount.current !== null && !round.started && stage === 'game') {
         clearInterval(roundCount.current)
         if (roundSound.current !== null) {
           roundSound.current.pause()

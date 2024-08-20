@@ -20,6 +20,7 @@ import {
 import {
   setRightAnswer,
   setRound,
+  setRoundInit,
   setRoundSound,
   setRoundStarted,
 } from './store/slices/roundSlice'
@@ -27,6 +28,7 @@ import { setStage } from './store/slices/stageSlice'
 import { setUserId } from './store/slices/userSlice'
 
 const endAud = new Audio(announceSounds['end.mp3'])
+const dissapointEndAud = new Audio(announceSounds['dissapointEnd.mp3'])
 
 export default function App() {
   const error = useAppSelector((state) => state.error.value)
@@ -37,6 +39,7 @@ export default function App() {
   const navigate = useNavigate()
 
   useEffect(() => {
+    let soundForRoundController: AbortController
     function onConnect() {
       dispatch(setConnected(true))
       dispatch(setUserId(socket.id))
@@ -54,7 +57,9 @@ export default function App() {
     function onPlayerData(players: Array<IPlayer>) {
       dispatch(setPlayers(players))
       if (players.length === 0) {
+        soundForRoundController.abort()
         dispatch(setStage('init'))
+        dispatch(setRoundInit())
         navigate('/')
       }
     }
@@ -108,12 +113,23 @@ export default function App() {
 
     //FIXME: need abort controller
     async function onSoundForRound(sound: Buffer) {
+      soundForRoundController = new AbortController()
+      const signal = soundForRoundController.signal
       const audioBlob = new Blob([sound], { type: 'audio/mp3' })
       const audioUrl = URL.createObjectURL(audioBlob)
       const audio = new Audio(audioUrl)
-      await waitAndPlaySound(audio, 2000)
-      dispatch(setRoundSound(audioUrl))
-      dispatch(setRoundStarted(true))
+      try {
+        await waitAndPlaySound(audio, 2000, signal)
+        console.log('notAborted')
+        dispatch(setRoundSound(audioUrl))
+        dispatch(setRoundStarted(true))
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error(error)
+        } else {
+          console.log('Aborted sound')
+        }
+      }
     }
 
     async function waitAction(timeout: number): Promise<void> {
@@ -131,13 +147,23 @@ export default function App() {
       guesses: Array<IGuesses>,
       clients: Array<IPlayer>
     ) {
+      let isDissapointed: boolean = true
+      clients.forEach((client) => {
+        if (client.points > 0) {
+          isDissapointed = false
+        }
+      })
       dispatch(setRightAnswer(rightAnswer))
       dispatch(setPlayers(clients))
       await waitAction(5000)
       if (isGameEnded) {
         dispatch(setStage('results'))
         dispatch(setRound(1))
-        await waitAndPlaySound(endAud, 1000)
+        if (isDissapointed) {
+          await waitAndPlaySound(dissapointEndAud, 1000)
+        } else {
+          await waitAndPlaySound(endAud, 1000)
+        }
       } else {
         currentRound.current += 1
         dispatch(setRound(currentRound.current))

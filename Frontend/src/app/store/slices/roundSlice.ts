@@ -40,6 +40,16 @@ export const roundSlice = createSlice({
     setRightAnswer: (state, payload: PayloadAction<string>) => {
       state.value.rightAnswer = payload.payload
     },
+    setRoundInit: (state) => {
+      state.value = {
+        currentRound: 1,
+        chosenUnit: '',
+        timeLeft: 5,
+        started: false,
+        soundUrl: null,
+        rightAnswer: '',
+      }
+    },
   },
 })
 
@@ -50,6 +60,7 @@ export const {
   setRoundStarted,
   setRoundSound,
   setRightAnswer,
+  setRoundInit,
 } = roundSlice.actions
 export const selectRound = (state: RootState) => state.round.value
 export default roundSlice.reducer

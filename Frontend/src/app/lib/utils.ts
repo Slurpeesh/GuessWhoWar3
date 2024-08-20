@@ -22,30 +22,14 @@ export function waitAndPlaySound(
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     const timer = setTimeout(() => {
-      audio.play().catch(reject)
-
-      const onEnded = () => {
-        clearListeners()
-        resolve()
-      }
-
-      const onError = (error: Event) => {
-        clearListeners()
-        reject(error)
-      }
-
-      const clearListeners = () => {
-        audio.onended = null
-        audio.onerror = null
-        signal?.removeEventListener('abort', onAbort)
-      }
-
-      const onAbort = () => {
+      if (signal?.aborted) {
         clearListeners()
         audio.pause()
         audio.currentTime = 0
-        reject(new DOMException('Aborted', 'AbortError'))
+        return reject(new DOMException('Aborted', 'AbortError'))
       }
+
+      audio.play().catch(reject)
 
       audio.onended = onEnded
       audio.onerror = onError
@@ -55,10 +39,34 @@ export function waitAndPlaySound(
       }
     }, timeout)
 
+    const onEnded = () => {
+      clearListeners()
+      resolve()
+    }
+
+    const onError = (error: Event) => {
+      clearListeners()
+      reject(error)
+    }
+
+    const clearListeners = () => {
+      clearTimeout(timer)
+      audio.onended = null
+      audio.onerror = null
+      signal?.removeEventListener('abort', onAbort)
+    }
+
+    const onAbort = () => {
+      clearListeners()
+      audio.pause()
+      audio.currentTime = 0
+      reject(new DOMException('Aborted', 'AbortError'))
+    }
+
     if (signal) {
       signal.addEventListener('abort', () => {
         clearTimeout(timer)
-        reject(new DOMException('Aborted', 'AbortError'))
+        onAbort()
       })
     }
   })

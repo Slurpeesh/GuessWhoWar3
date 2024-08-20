@@ -68,9 +68,25 @@ export default function LobbyPlayers() {
                 className={cn({
                   'bg-green-400': player.id === user.id,
                   'ring-2 ring-yellow-500 bg-gradient-to-br from-green-400 to-yellow-500':
-                    isWinner && stage === 'results' && player.id === socket.id,
+                    isWinner &&
+                    stage === 'results' &&
+                    player.id === socket.id &&
+                    pointsOfPlayer > 0,
                   'ring-2 ring-yellow-500 bg-gradient-to-br from-blue-200 to-yellow-500':
-                    isWinner && stage === 'results' && player.id !== socket.id,
+                    isWinner &&
+                    stage === 'results' &&
+                    player.id !== socket.id &&
+                    pointsOfPlayer > 0,
+                  'ring-2 ring-red-500 bg-gradient-to-br from-green-400 to-red-500':
+                    isWinner &&
+                    stage === 'results' &&
+                    player.id === socket.id &&
+                    pointsOfPlayer === 0,
+                  'ring-2 ring-red-500 bg-gradient-to-br from-blue-200 to-red-500':
+                    isWinner &&
+                    stage === 'results' &&
+                    player.id !== socket.id &&
+                    pointsOfPlayer === 0,
                 })}
                 key={index}
               >

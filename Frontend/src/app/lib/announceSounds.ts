@@ -6,6 +6,7 @@ type AnnounceSounds =
   | 'roundStart.mp3'
   | 'timesUp.mp3'
   | 'countdown.mp3'
+  | 'dissapointEnd.mp3'
 
 const announceSounds = importAll(
   require.context('@public/assets/sound/', false, /\.(mp3)$/)
