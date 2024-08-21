@@ -10,19 +10,25 @@ import {
   TooltipTrigger,
 } from '@/shared/Tooltip/Tooltip'
 import { Copy, CopyCheck } from 'lucide-react'
-import { MutableRefObject, useRef, useState } from 'react'
+import { MutableRefObject, useEffect, useRef, useState } from 'react'
 
 export default function LobbyPlayers() {
   const user = useAppSelector((state) => state.user.value)
   const roomConfig = useAppSelector((state) => state.roomConfig.value)
   const stage = useAppSelector((state) => state.stage.value)
   const lobbyPlayers = useAppSelector((state) => state.lobbyPlayers.value)
+  const leaveButtonRef: MutableRefObject<HTMLButtonElement> = useRef(null)
   const [copied, setCopied] = useState(false)
   const timeoutID: MutableRefObject<ReturnType<typeof setTimeout>> =
     useRef(undefined)
   const dispatch = useAppDispatch()
 
+  useEffect(() => {
+    leaveButtonRef.current.disabled = false
+  }, [])
+
   function onLeaveButtonHandler() {
+    leaveButtonRef.current.disabled = true
     socket.emit('leaveLobby', user.id, user.role)
     dispatch(setRole(null))
     dispatch(setChosenUnit(''))
@@ -48,6 +54,7 @@ export default function LobbyPlayers() {
   return (
     <>
       <button
+        ref={leaveButtonRef}
         className="absolute top-5 left-5 bg-red-800 p-2 text-slate-200 rounded-lg"
         onClick={() => onLeaveButtonHandler()}
       >

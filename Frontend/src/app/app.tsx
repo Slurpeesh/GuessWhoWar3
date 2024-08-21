@@ -146,6 +146,7 @@ export default function App() {
       guesses: Array<IGuesses>,
       clients: Array<IPlayer>
     ) {
+      console.log(rightAnswer)
       let isDissapointed: boolean = true
       clients.forEach((client) => {
         if (client.points > 0) {
