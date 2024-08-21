@@ -4,6 +4,7 @@
     "noImplicitAny": true,
     "module": "ESNext",
     "target": "es5",
+    "lib": ["ES5", "WebWorker", "DOM"],
     "jsx": "react-jsx",
     "allowJs": true,
     "moduleResolution": "Node",

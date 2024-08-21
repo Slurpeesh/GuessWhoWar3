@@ -227,7 +227,7 @@ export default function App() {
       </Suspense>
       {process.env.NODE_ENV === 'development' && <Dev />}
       {!isConnected && (
-        <div className="absolute z-50 top-0 left-0 w-dvw h-dvh bg-slate-300/80 flex justify-center items-center">
+        <div className="absolute z-50 top-0 left-0 w-dvw h-dvh bg-slate-300/80 flex flex-col gap-5 justify-center items-center">
           <Loader />
           <p className="text-xl">Connecting...</p>
         </div>
