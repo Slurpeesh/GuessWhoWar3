@@ -16,6 +16,8 @@ import {
   SocketData,
 } from './types'
 
+const PORT = process.env.PORT || 6122
+
 const directoryPath = path.join(__dirname, '../assets/sounds/')
 
 const audioFiles = getAudioFiles(directoryPath)
@@ -210,6 +212,6 @@ io.on('connection', (socket) => {
   })
 })
 
-httpServer.listen(6122, () => {
-  console.log('Server is listening on port 6122')
+httpServer.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`)
 })
