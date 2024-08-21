@@ -34,6 +34,7 @@ export default function App() {
   const error = useAppSelector((state) => state.error.value)
   const round = useAppSelector((state) => state.round.value)
   const lobbyPlayers = useAppSelector((state) => state.lobbyPlayers.value)
+  const isConnected = useAppSelector((state) => state.isConnected.value)
   const currentRound: MutableRefObject<number> = useRef(round.currentRound)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -225,6 +226,12 @@ export default function App() {
         <Outlet />
       </Suspense>
       {process.env.NODE_ENV === 'development' && <Dev />}
+      {!isConnected && (
+        <div className="absolute z-50 top-0 left-0 w-dvw h-dvh bg-slate-300/80 flex justify-center items-center">
+          <Loader />
+          <p className="text-xl">Connecting...</p>
+        </div>
+      )}
     </div>
   )
 }
