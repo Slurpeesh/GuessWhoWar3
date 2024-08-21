@@ -146,7 +146,7 @@ io.on('connection', (socket) => {
     } else {
       const sounds = await audioFiles
       const sound = sounds[Math.floor(Math.random() * sounds.length)]
-      const match = sound.match(/([^\d\\]*)\d+\.aac$/)
+      const match = sound.match(/([^\d\\\/]*)\d+\.aac$/)
       if (match) {
         rooms.get(roomId)!.currentRound.answer = match[1]
       } else {
