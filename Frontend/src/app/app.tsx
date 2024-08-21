@@ -114,23 +114,19 @@ export default function App() {
       dispatch(setStage('game'))
     }
 
-    //FIXME: need abort controller
     async function onSoundForRound(sound: Buffer) {
       soundForRoundController = new AbortController()
       const signal = soundForRoundController.signal
-      const audioBlob = new Blob([sound], { type: 'audio/mp3' })
+      const audioBlob = new Blob([sound], { type: 'audio/aac' })
       const audioUrl = URL.createObjectURL(audioBlob)
       const audio = new Audio(audioUrl)
       try {
         await waitAndPlaySound(audio, 2000, signal)
-        console.log('notAborted')
         dispatch(setRoundSound(audioUrl))
         dispatch(setRoundStarted(true))
       } catch (error) {
         if (error.name !== 'AbortError') {
           console.error(error)
-        } else {
-          console.log('Aborted sound')
         }
       }
     }

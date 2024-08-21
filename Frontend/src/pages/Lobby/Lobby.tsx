@@ -65,7 +65,6 @@ export default function Lobby() {
       if (stage === 'game') {
         try {
           await waitAndPlaySound(introSpeechAud, 2000, signal)
-          console.log('Get Sound from lobby')
           socket.emit('getSoundForRound')
         } catch (error) {
           if (error.name !== 'AbortError') {

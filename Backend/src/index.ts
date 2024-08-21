@@ -126,7 +126,6 @@ io.on('connection', (socket) => {
   })
 
   socket.on('startGame', () => {
-    console.log('Start game')
     const roomId = socket.data.room
     const clients = rooms.get(roomId)!.clients
     rooms.get(roomId)!.isGameStarted = true
@@ -135,7 +134,6 @@ io.on('connection', (socket) => {
   })
 
   socket.on('getSoundForRound', async () => {
-    console.log('Get sound for round')
     const roomId = socket.data.room
     if (!rooms.has(roomId)) {
       return
@@ -146,11 +144,11 @@ io.on('connection', (socket) => {
     } else {
       const sounds = await audioFiles
       const sound = sounds[Math.floor(Math.random() * sounds.length)]
-      const match = sound.match(/([^\d\\]*)\d+\.mp3$/)
+      const match = sound.match(/([^\d\\]*)\d+\.aac$/)
       if (match) {
         rooms.get(roomId)!.currentRound.answer = match[1]
       } else {
-        throw Error('Wrong mp3 name')
+        throw Error('Wrong aac name')
       }
       audioFilePath = path.join(directoryPath, sound)
       rooms.get(roomId)!.currentRound.sound = audioFilePath
@@ -172,7 +170,6 @@ io.on('connection', (socket) => {
   })
 
   socket.on('roundAnswer', (answer: string) => {
-    console.log('Getting answer for round')
     const roomId = socket.data.room
     const room = rooms.get(roomId) as IRoomsMapValue
     const rightAnswer = room.currentRound.answer

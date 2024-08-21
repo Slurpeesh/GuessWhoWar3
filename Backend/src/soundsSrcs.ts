@@ -11,7 +11,7 @@ export async function getAudioFiles(dir: string): Promise<string[]> {
       const filePath = path.join(currentDir, file.name)
       if (file.isDirectory()) {
         await readDirRecursively(filePath)
-      } else if (/\.mp3$/i.test(file.name)) {
+      } else if (/\.aac$/i.test(file.name)) {
         const relativeFilePath = path.relative(dir, filePath)
         audioFiles.push(relativeFilePath)
       }
