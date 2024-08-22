@@ -2,11 +2,22 @@ import { useAppDispatch, useAppSelector } from '@/app/hooks/useActions'
 import announceSounds from '@/app/lib/announceSounds'
 import { waitAndPlaySound } from '@/app/lib/utils'
 import { socket } from '@/app/socket'
-import { setRoundStarted, setTimeLeft } from '@/app/store/slices/roundSlice'
+import {
+  setChosenUnit,
+  setRoundStarted,
+  setTimeLeft,
+} from '@/app/store/slices/roundSlice'
+import { setRole } from '@/app/store/slices/userSlice'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/shared/Tooltip/Tooltip'
 import LobbyPlayers from '@/widgets/LobbyPlayers/LobbyPlayers'
 import UnitToggleGroup from '@/widgets/UnitToggleGroup/UnitToggleGroup'
-import { AudioLines } from 'lucide-react'
-import { MutableRefObject, useEffect, useRef } from 'react'
+import { AudioLines, Copy, CopyCheck, LogOut } from 'lucide-react'
+import { MutableRefObject, useEffect, useRef, useState } from 'react'
 
 const introSpeechAud = new Audio(announceSounds['introSpeech.mp3'])
 const timesUpAud = new Audio(announceSounds['timesUp.mp3'])
@@ -16,10 +27,21 @@ export default function Lobby() {
   const lobbyPlayers = useAppSelector((state) => state.lobbyPlayers.value)
   const round = useAppSelector((state) => state.round.value)
   const stage = useAppSelector((state) => state.stage.value)
+  const roomConfig = useAppSelector((state) => state.roomConfig.value)
+  const user = useAppSelector((state) => state.user.value)
   const roundCount: MutableRefObject<NodeJS.Timeout> = useRef(null)
   const count: MutableRefObject<number> = useRef(round.timeLeft)
   const roundSound: MutableRefObject<HTMLAudioElement> = useRef(null)
+
+  const leaveButtonRef: MutableRefObject<HTMLButtonElement> = useRef(null)
+  const [copied, setCopied] = useState(false)
+  const timeoutID: MutableRefObject<ReturnType<typeof setTimeout>> =
+    useRef(undefined)
   const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    leaveButtonRef.current.disabled = false
+  }, [])
 
   useEffect(() => {
     const playRound = async () => {
@@ -90,8 +112,40 @@ export default function Lobby() {
     roundSound.current.play()
   }
 
+  function onLeaveButtonHandler() {
+    leaveButtonRef.current.disabled = true
+    socket.emit('leaveLobby', user.id, user.role)
+    dispatch(setRole(null))
+    dispatch(setChosenUnit(''))
+  }
+
+  function onCopyButtonClick() {
+    navigator.clipboard.writeText(roomConfig.id)
+    setCopied(true)
+    if (timeoutID.current) {
+      clearTimeout(timeoutID.current)
+    }
+    timeoutID.current = setTimeout(() => setCopied(false), 3000)
+  }
+
+  function onStart() {
+    socket.emit('startGame')
+  }
+
+  function onToLobby() {
+    socket.emit('toLobby')
+  }
+
   return (
     <div className="flex flex-grow flex-col justify-center items-center">
+      <button
+        ref={leaveButtonRef}
+        className="absolute top-5 left-5 flex items-center gap-2 bg-red-800 p-2 text-slate-200 rounded-lg"
+        onClick={() => onLeaveButtonHandler()}
+      >
+        <p className="font-semibold">Leave</p>
+        <LogOut />
+      </button>
       {round.started && (
         <>
           <div className="text-xl font-bold">Time left: {round.timeLeft}</div>
@@ -108,6 +162,43 @@ export default function Lobby() {
         <div className="text-xl font-bold">Round: {round.currentRound}</div>
       )}
       {lobbyPlayers.length !== 0 && <LobbyPlayers />}
+      {user.role === 'host' && stage === 'lobby' && (
+        <button
+          className="bg-green-800 p-2 text-slate-200 rounded-lg"
+          onClick={() => onStart()}
+        >
+          Start
+        </button>
+      )}
+      {user.role === 'host' && stage === 'results' && (
+        <button
+          className="bg-green-800 p-2 text-slate-200 rounded-lg"
+          onClick={() => onToLobby()}
+        >
+          To lobby
+        </button>
+      )}
+      {stage === 'lobby' && (
+        <TooltipProvider>
+          <Tooltip open={copied ? true : undefined}>
+            <TooltipTrigger asChild>
+              <button
+                className="rounded-md p-1 bg-blue-200 flex justify-center items-center gap-2 font-bold"
+                onClick={() => onCopyButtonClick()}
+              >
+                <p className="uppercase">Share: {roomConfig.id}</p>
+                {copied ? <CopyCheck /> : <Copy />}
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <div>{copied ? 'Copied!' : 'Copy'}</div>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
+      {stage === 'results' && user.role === 'player' && (
+        <p>Waiting for host to return to lobby...</p>
+      )}
       {stage === 'game' && <UnitToggleGroup />}
     </div>
   )
