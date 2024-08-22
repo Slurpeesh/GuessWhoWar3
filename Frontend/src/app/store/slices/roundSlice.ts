@@ -6,12 +6,11 @@ export interface IRoundSlice {
   value: IRound
 }
 
-//FIXME: change timeLeft to >= 20
 const initialState: IRoundSlice = {
   value: {
     currentRound: 1,
     chosenUnit: '',
-    timeLeft: 5,
+    timeLeft: process.env.NODE_ENV === 'development' ? 5 : 20,
     started: false,
     soundUrl: null,
     rightAnswer: '',

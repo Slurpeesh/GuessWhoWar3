@@ -44,9 +44,9 @@ export default function Lobby() {
         }
         await waitAndPlaySound(timesUpAud)
         socket.emit('roundAnswer', round.chosenUnit)
-        //FIXME: change time to >= 20
-        count.current = 5
-        dispatch(setTimeLeft(5))
+        const isDev = process.env.NODE_ENV === 'development'
+        count.current = isDev ? 5 : 20
+        dispatch(setTimeLeft(isDev ? 5 : 20))
       }
     }
 
