@@ -2,6 +2,8 @@ import { RootState } from '@/app/store'
 import { IRound } from '@/global'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+const isDev = process.env.NODE_ENV === 'development'
+
 export interface IRoundSlice {
   value: IRound
 }
@@ -10,7 +12,7 @@ const initialState: IRoundSlice = {
   value: {
     currentRound: 1,
     chosenUnit: '',
-    timeLeft: process.env.NODE_ENV === 'development' ? 5 : 20,
+    timeLeft: isDev ? 5 : 20,
     started: false,
     soundUrl: null,
     rightAnswer: '',
@@ -43,7 +45,7 @@ export const roundSlice = createSlice({
       state.value = {
         currentRound: 1,
         chosenUnit: '',
-        timeLeft: 5,
+        timeLeft: isDev ? 5 : 20,
         started: false,
         soundUrl: null,
         rightAnswer: '',
