@@ -6,6 +6,7 @@ const imagesUnits = importAll(
 
 export type ImagesBackground =
   | 'bg.png'
+  | 'bgTwl.png'
   | 'bgUndead.png'
   | 'bgHorde.png'
   | 'bgNightElf.png'
@@ -15,9 +16,11 @@ const imagesBackground = importAll(
   require.context('@public/assets/img/bg/', false, /\.(png|jpe?g)$/)
 ) as Record<ImagesBackground, string>
 
-const dynamicKey = 'bg.png'
-let { [dynamicKey]: _, ...bgLobby } = imagesBackground
+const bgMainKey = 'bg.png'
+const bgTwlKey = 'bgTwl.png'
+let { [bgMainKey]: _bgMain, [bgTwlKey]: _bgTwl, ...bgLobby } = imagesBackground
 
 const bgMain = imagesBackground['bg.png']
+const bgTwl = imagesBackground['bgTwl.png']
 
-export { bgLobby, bgMain, imagesUnits }
+export { bgLobby, bgMain, bgTwl, imagesUnits }
