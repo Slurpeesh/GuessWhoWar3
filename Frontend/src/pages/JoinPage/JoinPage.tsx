@@ -10,6 +10,7 @@ export default function JoinPage() {
 
   function onSubmitHandle(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    if (user.name.length === 0) return
     socket.emit('joinGame', user.name, joinRoomId)
     dispatch(setRole('player'))
   }
@@ -23,8 +24,11 @@ export default function JoinPage() {
   }
 
   return (
-    <div className="relative z-10 flex flex-col justify-center items-center gap-10">
+    <div className="relative z-10 flex flex-col justify-center items-center gap-5">
       <h2 className="text-3xl font-bold">Join existing lobby</h2>
+      {user.name.length === 0 && (
+        <p className="text-xl font-semibold text-red-800">Name is empty</p>
+      )}
       <form
         onSubmit={(e) => onSubmitHandle(e)}
         className="flex flex-col gap-5 items-center text-xl font-medium"

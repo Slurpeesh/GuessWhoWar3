@@ -1,6 +1,8 @@
 import { RootState } from '@/app/store'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+const name = localStorage.getItem('name') ?? 'Player'
+
 interface IUser {
   id: string
   name: string
@@ -12,7 +14,7 @@ export interface IUserSlice {
 }
 
 const initialState: IUserSlice = {
-  value: { id: '', name: 'Player', role: null },
+  value: { id: '', name, role: null },
 }
 
 export const userSlice = createSlice({
@@ -21,6 +23,7 @@ export const userSlice = createSlice({
   reducers: {
     changeUserName: (state, payload: PayloadAction<string>) => {
       state.value.name = payload.payload
+      localStorage.setItem('name', payload.payload)
     },
     setUserId: (state, payload: PayloadAction<string>) => {
       state.value.id = payload.payload

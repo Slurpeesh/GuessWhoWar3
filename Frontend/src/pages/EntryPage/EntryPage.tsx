@@ -35,15 +35,15 @@ export default function EntryPage() {
         >
           Join lobby
         </NavLink>
-        <p>
+        <p className="text-sm text-center">
           Inspired by{' '}
           <a
             href="https://www.hiveworkshop.com/threads/the-weakest-link-v1-01.78089/"
             target="_blank"
-            className="inline-flex items-center underline underline-offset-4 hover:text-blue-800 transition-colors"
+            className="inline-flex items-center underline underline-offset-4 hover:text-blue-900"
           >
-            <p>Brian Deksnys's map The Weakest Link</p>
-            <ExternalLink className="w-4 h-4 stroke-[1.7]" />
+            <span>Brian Deksnys's map The Weakest Link</span>
+            <ExternalLink className="w-4 h-4 stroke-[1.5]" />
           </a>{' '}
           for Warcraft 3
         </p>

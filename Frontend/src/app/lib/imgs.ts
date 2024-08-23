@@ -20,6 +20,4 @@ let { [dynamicKey]: _, ...bgLobby } = imagesBackground
 
 const bgMain = imagesBackground['bg.png']
 
-console.log(imagesBackground)
-
 export { bgLobby, bgMain, imagesUnits }

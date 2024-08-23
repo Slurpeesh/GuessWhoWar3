@@ -60,16 +60,9 @@ container.render(
 )
 
 if ('serviceWorker' in navigator) {
-  console.log('Creating SW')
   window.addEventListener('load', () => {
     navigator.serviceWorker
       .register(new URL('@/app/workers/sw_images.ts', import.meta.url))
-      .then((registration) => {
-        console.log(
-          'ServiceWorker registration successful with scope: ',
-          registration.scope
-        )
-      })
       .catch((error) => {
         console.log('ServiceWorker registration failed: ', error)
       })

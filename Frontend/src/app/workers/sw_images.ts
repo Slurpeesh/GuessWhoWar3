@@ -9,7 +9,6 @@ const images = importAll(
 const ctx: ServiceWorkerGlobalScope = self as any
 
 ctx.addEventListener('install', (e: ExtendableEvent) => {
-  console.log('sw_images installed')
   ctx.skipWaiting()
   e.waitUntil(
     caches.open(CACHE).then((cache) => {
@@ -19,7 +18,6 @@ ctx.addEventListener('install', (e: ExtendableEvent) => {
 })
 
 ctx.addEventListener('activate', (e: ExtendableEvent) => {
-  console.log('sw_images activated')
   e.waitUntil(ctx.clients.claim())
   e.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -36,8 +34,6 @@ ctx.addEventListener('activate', (e: ExtendableEvent) => {
 })
 
 ctx.addEventListener('fetch', (e: FetchEvent) => {
-  console.log('sw_images fetching')
-
   if (e.request.destination === 'image') {
     e.respondWith(
       caches

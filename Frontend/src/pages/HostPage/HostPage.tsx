@@ -9,17 +9,19 @@ import {
 import { changeUserName, setRole } from '@/app/store/slices/userSlice'
 import { Repeat } from 'lucide-react'
 import { ChangeEvent, FormEvent, MouseEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 export default function HostPage() {
   const user = useAppSelector((state) => state.user.value)
   const roomConfig = useAppSelector((state) => state.roomConfig.value)
-  const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
   function onSubmitHandle(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    if (roomConfig.maxPlayers === 0 || roomConfig.rounds === 0) {
+    if (
+      user.name.length === 0 ||
+      roomConfig.maxPlayers === 0 ||
+      roomConfig.rounds === 0
+    ) {
       return
     }
     socket.emit('hostGame', user.name, roomConfig)
@@ -58,22 +60,24 @@ export default function HostPage() {
   }
 
   return (
-    <div className="relative z-10 flex flex-col justify-center items-center gap-10">
+    <div className="relative z-10 flex flex-col justify-center items-center gap-5">
       <h2 className="text-3xl font-bold">Host new lobby</h2>
       <form
         onSubmit={(e) => onSubmitHandle(e)}
         className="flex flex-col gap-5 items-center text-xl font-medium"
       >
-        {roomConfig.maxPlayers === 0 && (
-          <div className="text-xl font-semibold text-red-800">
-            Max players must be at least 1
+        {(user.name.length === 0 ||
+          roomConfig.maxPlayers === 0 ||
+          roomConfig.rounds === 0) && (
+          <div className="min-h-0 text-xl font-semibold text-red-800">
+            {user.name.length === 0 && <p>Name is empty</p>}
+            {roomConfig.maxPlayers === 0 && (
+              <p>Max players must be at least 1</p>
+            )}
+            {roomConfig.rounds === 0 && <p>Rounds must be at least 1</p>}
           </div>
         )}
-        {roomConfig.rounds === 0 && (
-          <div className="text-xl font-semibold text-red-800">
-            Rounds must be at least 1
-          </div>
-        )}
+
         <div className="grid grid-cols-3 gap-5">
           <label className="content-center" htmlFor="name">
             Your name:
