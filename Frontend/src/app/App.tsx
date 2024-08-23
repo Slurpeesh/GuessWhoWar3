@@ -1,4 +1,5 @@
 import Loader from '@/entities/Loader/Loader'
+import SoundVolumeSlider from '@/features/SoundVolumeSlider/SoundVolumeSlider'
 import { IGuesses, IPlayer, IRoomConfig, IStage } from '@/global'
 import Dev from '@/pages/Dev/Dev'
 import { CircleAlert } from 'lucide-react'
@@ -32,8 +33,8 @@ const dissapointEndAud = new Audio(announceSounds['dissapointEnd.mp3'])
 
 export default function App() {
   const error = useAppSelector((state) => state.error.value)
+  const volume = useAppSelector((state) => state.volume.value)
   const round = useAppSelector((state) => state.round.value)
-  const lobbyPlayers = useAppSelector((state) => state.lobbyPlayers.value)
   const isConnected = useAppSelector((state) => state.isConnected.value)
   const currentRound: MutableRefObject<number> = useRef(round.currentRound)
   const dispatch = useAppDispatch()
@@ -41,6 +42,7 @@ export default function App() {
 
   useEffect(() => {
     let soundForRoundController: AbortController = null
+    let endSoundController: AbortController = null
     function onConnect() {
       dispatch(setConnected(true))
       dispatch(setUserId(socket.id))
@@ -60,6 +62,9 @@ export default function App() {
       if (players.length === 0) {
         if (soundForRoundController !== null) {
           soundForRoundController.abort()
+        }
+        if (endSoundController !== null) {
+          endSoundController.abort()
         }
         dispatch(setStage('init'))
         dispatch(setRoundInit())
@@ -160,10 +165,18 @@ export default function App() {
       if (isGameEnded) {
         dispatch(setStage('results'))
         dispatch(setRound(1))
-        if (isDissapointed) {
-          await waitAndPlaySound(dissapointEndAud, 1000)
-        } else {
-          await waitAndPlaySound(endAud, 1000)
+        endSoundController = new AbortController()
+        const signal = endSoundController.signal
+        try {
+          if (isDissapointed) {
+            await waitAndPlaySound(dissapointEndAud, 1000, signal)
+          } else {
+            await waitAndPlaySound(endAud, 1000, signal)
+          }
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            console.error(error)
+          }
         }
       } else {
         currentRound.current += 1
@@ -173,6 +186,9 @@ export default function App() {
     }
 
     function onTransferToLobby() {
+      if (endSoundController !== null) {
+        endSoundController.abort()
+      }
       dispatch(setNullifyPoints())
       dispatch(setRoundInit())
       currentRound.current = 1
@@ -226,6 +242,7 @@ export default function App() {
         <Outlet />
       </Suspense>
       {process.env.NODE_ENV === 'development' && <Dev />}
+      <SoundVolumeSlider className="absolute bottom-5 right-10 w-80" />
       {!isConnected && (
         <div className="absolute z-50 top-0 left-0 w-dvw h-dvh bg-slate-300/80 flex flex-col gap-5 justify-center items-center">
           <Loader />

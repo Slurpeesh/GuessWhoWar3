@@ -5,6 +5,7 @@ import roomConfigReducer from '@/app/store/slices/roomConfigSlice'
 import roundReducer from '@/app/store/slices/roundSlice'
 import stageReducer from '@/app/store/slices/stageSlice'
 import userReducer from '@/app/store/slices/userSlice'
+import volumeReducer from '@/app/store/slices/volumeSlice'
 import { configureStore } from '@reduxjs/toolkit'
 import lobbyPlayersReducer from './slices/lobbyPlayers'
 
@@ -18,6 +19,7 @@ export const store = configureStore({
     error: errorReducer,
     stage: stageReducer,
     round: roundReducer,
+    volume: volumeReducer,
   },
 })
 
