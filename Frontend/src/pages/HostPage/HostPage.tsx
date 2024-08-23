@@ -58,7 +58,7 @@ export default function HostPage() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center gap-10">
+    <div className="relative z-10 flex flex-col justify-center items-center gap-10">
       <h2 className="text-3xl font-bold">Host new lobby</h2>
       <form
         onSubmit={(e) => onSubmitHandle(e)}

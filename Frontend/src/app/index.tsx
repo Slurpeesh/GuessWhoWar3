@@ -1,10 +1,10 @@
 import '@/index.css'
 
-import EntryPage from '@/pages/EntryPage/EntryPage'
+import LazyEntryPage from '@/pages/EntryPage/EntryPage.lazy'
 import ErrorPage from '@/pages/ErrorPage/ErrorPage'
 import LazyHostPage from '@/pages/HostPage/HostPage.lazy'
 import LazyJoinPage from '@/pages/JoinPage/JoinPage.lazy'
-import Lobby from '@/pages/Lobby/Lobby'
+import LazyLobby from '@/pages/Lobby/Lobby.lazy'
 import PageLoadingScreen from '@/pages/PageLoadingScreen/PageLoadingScreen'
 import { Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <EntryPage />,
+        element: <LazyEntryPage />,
         children: [
           {
             path: '/host',
@@ -46,7 +46,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/lobby',
-        element: <Lobby />,
+        element: <LazyLobby />,
       },
     ],
     errorElement: <ErrorPage />,

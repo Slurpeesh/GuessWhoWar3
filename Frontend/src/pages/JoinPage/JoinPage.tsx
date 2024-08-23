@@ -23,7 +23,7 @@ export default function JoinPage() {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center gap-10">
+    <div className="relative z-10 flex flex-col justify-center items-center gap-10">
       <h2 className="text-3xl font-bold">Join existing lobby</h2>
       <form
         onSubmit={(e) => onSubmitHandle(e)}

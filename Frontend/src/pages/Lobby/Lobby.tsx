@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks/useActions'
 import announceSounds from '@/app/lib/announceSounds'
+import { bgLobby } from '@/app/lib/imgs'
 import { waitAndPlaySound } from '@/app/lib/utils'
 import { socket } from '@/app/socket'
 import {
@@ -17,7 +18,7 @@ import {
 import LobbyPlayers from '@/widgets/LobbyPlayers/LobbyPlayers'
 import UnitToggleGroup from '@/widgets/UnitToggleGroup/UnitToggleGroup'
 import { AudioLines, Copy, CopyCheck, LogOut } from 'lucide-react'
-import { MutableRefObject, useEffect, useRef, useState } from 'react'
+import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 
 const introSpeechAud = new Audio(announceSounds['introSpeech.mp3'])
 const timesUpAud = new Audio(announceSounds['timesUp.mp3'])
@@ -32,12 +33,16 @@ export default function Lobby() {
   const roundCount: MutableRefObject<NodeJS.Timeout> = useRef(null)
   const count: MutableRefObject<number> = useRef(round.timeLeft)
   const roundSound: MutableRefObject<HTMLAudioElement> = useRef(null)
-
   const leaveButtonRef: MutableRefObject<HTMLButtonElement> = useRef(null)
   const [copied, setCopied] = useState(false)
   const timeoutID: MutableRefObject<ReturnType<typeof setTimeout>> =
     useRef(undefined)
   const dispatch = useAppDispatch()
+
+  const randomBg = useMemo(() => {
+    const bgKeys = Object.keys(bgLobby) as Array<keyof typeof bgLobby>
+    return bgLobby[bgKeys[Math.floor(Math.random() * bgKeys.length)]]
+  }, [])
 
   useEffect(() => {
     leaveButtonRef.current.disabled = false
@@ -137,18 +142,26 @@ export default function Lobby() {
   }
 
   return (
-    <div className="flex flex-grow flex-col justify-center items-center">
+    <div className="relative flex flex-grow flex-col justify-center items-center">
+      <div
+        className="absolute right-0 top-0 h-full w-full bg-cover bg-center mix-blend-soft-light"
+        style={{
+          backgroundImage: `url(${randomBg})`,
+        }}
+      ></div>
       <button
         ref={leaveButtonRef}
         className="absolute top-5 left-5 flex items-center gap-2 bg-red-800 p-2 text-slate-200 rounded-lg"
         onClick={() => onLeaveButtonHandler()}
       >
-        <p className="font-semibold">Leave</p>
+        <p>Leave</p>
         <LogOut />
       </button>
       {round.started && (
-        <>
-          <div className="text-xl font-bold">Time left: {round.timeLeft}</div>
+        <div className="relative z-10">
+          <p className="text-xl font-bold text-center">
+            Time left: {round.timeLeft}
+          </p>
           <button
             onClick={() => repeatSoundForRound()}
             className="bg-yellow-400 p-2 rounded-lg flex justify-between items-center gap-2"
@@ -156,15 +169,17 @@ export default function Lobby() {
             <p>Repeat sound</p>
             <AudioLines />
           </button>
-        </>
+        </div>
       )}
       {stage === 'game' && (
-        <div className="text-xl font-bold">Round: {round.currentRound}</div>
+        <p className="relative z-10 text-xl font-bold">
+          Round: {round.currentRound}
+        </p>
       )}
       {lobbyPlayers.length !== 0 && <LobbyPlayers />}
       {user.role === 'host' && stage === 'lobby' && (
         <button
-          className="bg-green-800 p-2 text-slate-200 rounded-lg"
+          className="relative z-10 bg-green-800 p-2 text-slate-200 rounded-lg"
           onClick={() => onStart()}
         >
           Start
@@ -172,7 +187,7 @@ export default function Lobby() {
       )}
       {user.role === 'host' && stage === 'results' && (
         <button
-          className="bg-green-800 p-2 text-slate-200 rounded-lg"
+          className="relative z-10 bg-green-800 p-2 text-slate-200 rounded-lg"
           onClick={() => onToLobby()}
         >
           To lobby
@@ -181,7 +196,7 @@ export default function Lobby() {
       {stage === 'lobby' && (
         <TooltipProvider>
           <Tooltip open={copied ? true : undefined}>
-            <TooltipTrigger asChild>
+            <TooltipTrigger className="relative z-10" asChild>
               <button
                 className="rounded-md p-1 bg-blue-200 flex justify-center items-center gap-2 font-bold"
                 onClick={() => onCopyButtonClick()}
@@ -190,14 +205,14 @@ export default function Lobby() {
                 {copied ? <CopyCheck /> : <Copy />}
               </button>
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent className="relative z-10">
               <div>{copied ? 'Copied!' : 'Copy'}</div>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       )}
       {stage === 'results' && user.role === 'player' && (
-        <p>Waiting for host to return to lobby...</p>
+        <p className="relative z-10">Waiting for host to return to lobby...</p>
       )}
       {stage === 'game' && <UnitToggleGroup />}
     </div>

@@ -1,3 +1,4 @@
+import { bgMain } from '@/app/lib/imgs'
 import Loader from '@/entities/Loader/Loader'
 import { Suspense } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
@@ -33,10 +34,14 @@ export default function EntryPage() {
           Join lobby
         </NavLink>
       </div>
-      <div className="relative basis-2/3 bg-blue-500 flex flex-col justify-center items-center">
+      <div className="relative basis-2/3 bg-blue-300 flex flex-col justify-center items-center">
         <Suspense fallback={<Loader className="w-32" />}>
           <Outlet />
         </Suspense>
+        <div
+          className="absolute right-0 top-0 h-full w-full bg-cover bg-center mix-blend-soft-light"
+          style={{ backgroundImage: `url(${bgMain})` }}
+        ></div>
       </div>
     </>
   )

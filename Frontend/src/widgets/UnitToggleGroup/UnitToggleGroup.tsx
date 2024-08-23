@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from '@/app/hooks/useActions'
-import images from '@/app/lib/imgs'
+import { imagesUnits } from '@/app/lib/imgs'
 import { cn } from '@/app/lib/utils'
 import { setChosenUnit } from '@/app/store/slices/roundSlice'
 import {
@@ -17,14 +17,14 @@ export default function UnitToggleGroup() {
   }
 
   return (
-    <div>
+    <div className="relative z-10">
       <ToggleGroup
         type="single"
         className="flex flex-wrap"
         value={round.chosenUnit}
         onValueChange={(value) => onUnitChange(value)}
       >
-        {Object.keys(images).map((imageKey, index) => {
+        {Object.keys(imagesUnits).map((imageKey, index) => {
           const value = imageKey.match(
             /(Alliance|Neutral|Undead|Horde|NightElf)(\w*)/
           )[2]
@@ -40,7 +40,7 @@ export default function UnitToggleGroup() {
                   'grayscale-0 scale-125 transition-transform relative z-10 outline-none ring-4 ring-green-400':
                     value === round.rightAnswer,
                 })}
-                src={images[imageKey]}
+                src={imagesUnits[imageKey]}
                 alt={value}
               />
             </ToggleGroupItem>

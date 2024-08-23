@@ -3,7 +3,7 @@ import { importAll } from '../lib/utils'
 const CACHE = 'v1'
 
 const images = importAll(
-  require.context('@public/assets/img/', false, /\.(png|jpe?g)$/)
+  require.context('@public/assets/img/units/', false, /\.(png|jpe?g)$/)
 )
 
 const ctx: ServiceWorkerGlobalScope = self as any
