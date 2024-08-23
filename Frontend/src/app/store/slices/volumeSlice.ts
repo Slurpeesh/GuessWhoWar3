@@ -6,7 +6,7 @@ export interface IVolumeSlice {
 }
 
 const initialState: IVolumeSlice = {
-  value: 0.5,
+  value: 1,
 }
 
 export const volumeSlice = createSlice({

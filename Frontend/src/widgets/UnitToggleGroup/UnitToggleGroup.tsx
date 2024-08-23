@@ -13,7 +13,6 @@ export default function UnitToggleGroup() {
 
   function onUnitChange(value: string) {
     dispatch(setChosenUnit(value))
-    console.log(value)
   }
 
   return (

@@ -37,8 +37,22 @@ export default function App() {
   const round = useAppSelector((state) => state.round.value)
   const isConnected = useAppSelector((state) => state.isConnected.value)
   const currentRound: MutableRefObject<number> = useRef(round.currentRound)
+  const audioForRoundRef: MutableRefObject<HTMLAudioElement> = useRef(null)
+  const endAudRef: MutableRefObject<HTMLAudioElement> = useRef(endAud)
+  const dissapointEndAudRef: MutableRefObject<HTMLAudioElement> =
+    useRef(dissapointEndAud)
+  const volumeRef: MutableRefObject<number> = useRef(volume)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
+
+  useEffect(() => {
+    volumeRef.current = volume
+    endAudRef.current.volume = volume
+    dissapointEndAudRef.current.volume = volume
+    if (audioForRoundRef.current !== null) {
+      audioForRoundRef.current.volume = volume
+    }
+  }, [volume])
 
   useEffect(() => {
     let soundForRoundController: AbortController = null
@@ -126,6 +140,8 @@ export default function App() {
       const audioBlob = new Blob([sound], { type: 'audio/aac' })
       const audioUrl = URL.createObjectURL(audioBlob)
       const audio = new Audio(audioUrl)
+      audioForRoundRef.current = audio
+      audio.volume = volumeRef.current
       try {
         await waitAndPlaySound(audio, 2000, signal)
         dispatch(setRoundSound(audioUrl))
@@ -152,7 +168,7 @@ export default function App() {
       guesses: Array<IGuesses>,
       clients: Array<IPlayer>
     ) {
-      console.log(rightAnswer)
+      // console.log(rightAnswer)
       let isDissapointed: boolean = true
       clients.forEach((client) => {
         if (client.points > 0) {
@@ -169,9 +185,11 @@ export default function App() {
         const signal = endSoundController.signal
         try {
           if (isDissapointed) {
-            await waitAndPlaySound(dissapointEndAud, 1000, signal)
+            dissapointEndAudRef.current.volume = volumeRef.current
+            await waitAndPlaySound(dissapointEndAudRef.current, 1000, signal)
           } else {
-            await waitAndPlaySound(endAud, 1000, signal)
+            endAudRef.current.volume = volumeRef.current
+            await waitAndPlaySound(endAudRef.current, 1000, signal)
           }
         } catch (error) {
           if (error.name !== 'AbortError') {
@@ -242,7 +260,7 @@ export default function App() {
         <Outlet />
       </Suspense>
       {process.env.NODE_ENV === 'development' && <Dev />}
-      <SoundVolumeSlider className="absolute bottom-5 right-10 w-80" />
+      <SoundVolumeSlider className="absolute bottom-5 right-5 w-80" />
       {!isConnected && (
         <div className="absolute z-50 top-0 left-0 w-dvw h-dvh bg-slate-300/80 flex flex-col gap-5 justify-center items-center">
           <Loader />

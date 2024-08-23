@@ -21,13 +21,10 @@ import { AudioLines, Copy, CopyCheck, LogOut } from 'lucide-react'
 import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-const introSpeechAud = new Audio(announceSounds['introSpeech.mp3'])
-const timesUpAud = new Audio(announceSounds['timesUp.mp3'])
-const countdownAud = new Audio(announceSounds['countdown.mp3'])
-
 export default function Lobby() {
   const lobbyPlayers = useAppSelector((state) => state.lobbyPlayers.value)
   const round = useAppSelector((state) => state.round.value)
+  const volume = useAppSelector((state) => state.volume.value)
   const stage = useAppSelector((state) => state.stage.value)
   const roomConfig = useAppSelector((state) => state.roomConfig.value)
   const user = useAppSelector((state) => state.user.value)
@@ -41,6 +38,16 @@ export default function Lobby() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
+  const introSpeechAud = useMemo(
+    () => new Audio(announceSounds['introSpeech.mp3']),
+    []
+  )
+  const timesUpAud = useMemo(() => new Audio(announceSounds['timesUp.mp3']), [])
+  const countdownAud = useMemo(
+    () => new Audio(announceSounds['countdown.mp3']),
+    []
+  )
+
   const randomBg = useMemo(() => {
     const bgKeys = Object.keys(bgLobby) as Array<keyof typeof bgLobby>
     return bgLobby[bgKeys[Math.floor(Math.random() * bgKeys.length)]]
@@ -52,6 +59,15 @@ export default function Lobby() {
     }
     leaveButtonRef.current.disabled = false
   }, [])
+
+  useEffect(() => {
+    if (roundSound.current !== null) {
+      roundSound.current.volume = volume
+    }
+    introSpeechAud.volume = volume
+    timesUpAud.volume = volume
+    countdownAud.volume = volume
+  }, [volume])
 
   useEffect(() => {
     const playRound = async () => {
@@ -74,6 +90,7 @@ export default function Lobby() {
           roundSound.current.pause()
           roundSound.current = null
         }
+        timesUpAud.volume = volume
         await waitAndPlaySound(timesUpAud)
         socket.emit('roundAnswer', round.chosenUnit)
         const isDev = process.env.NODE_ENV === 'development'
@@ -96,6 +113,7 @@ export default function Lobby() {
     const playSoundStart = async () => {
       if (stage === 'game') {
         try {
+          introSpeechAud.volume = volume
           await waitAndPlaySound(introSpeechAud, 2000, signal)
           socket.emit('getSoundForRound')
         } catch (error) {
@@ -117,6 +135,7 @@ export default function Lobby() {
     if (roundSound.current === null) {
       roundSound.current = new Audio(round.soundUrl)
     }
+    roundSound.current.volume = volume
     roundSound.current.pause()
     roundSound.current.currentTime = 0
     roundSound.current.play()
