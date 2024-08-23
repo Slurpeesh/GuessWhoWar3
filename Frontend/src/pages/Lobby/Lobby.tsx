@@ -19,6 +19,7 @@ import LobbyPlayers from '@/widgets/LobbyPlayers/LobbyPlayers'
 import UnitToggleGroup from '@/widgets/UnitToggleGroup/UnitToggleGroup'
 import { AudioLines, Copy, CopyCheck, LogOut } from 'lucide-react'
 import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const introSpeechAud = new Audio(announceSounds['introSpeech.mp3'])
 const timesUpAud = new Audio(announceSounds['timesUp.mp3'])
@@ -38,6 +39,7 @@ export default function Lobby() {
   const timeoutID: MutableRefObject<ReturnType<typeof setTimeout>> =
     useRef(undefined)
   const dispatch = useAppDispatch()
+  const navigate = useNavigate()
 
   const randomBg = useMemo(() => {
     const bgKeys = Object.keys(bgLobby) as Array<keyof typeof bgLobby>
@@ -45,6 +47,9 @@ export default function Lobby() {
   }, [])
 
   useEffect(() => {
+    if (stage === 'init') {
+      navigate('/', { replace: true })
+    }
     leaveButtonRef.current.disabled = false
   }, [])
 

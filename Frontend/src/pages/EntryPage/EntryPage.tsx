@@ -1,5 +1,6 @@
 import { bgMain } from '@/app/lib/imgs'
 import Loader from '@/entities/Loader/Loader'
+import { ExternalLink } from 'lucide-react'
 import { Suspense } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 
@@ -7,6 +8,7 @@ export default function EntryPage() {
   return (
     <>
       <div className="basis-1/3 bg-blue-300 flex flex-col gap-5 justify-center items-center">
+        <h1 className="text-3xl font-bold">GuessWhoWar3</h1>
         <NavLink
           className={({ isActive }) => {
             return [
@@ -33,6 +35,18 @@ export default function EntryPage() {
         >
           Join lobby
         </NavLink>
+        <p>
+          Inspired by{' '}
+          <a
+            href="https://www.hiveworkshop.com/threads/the-weakest-link-v1-01.78089/"
+            target="_blank"
+            className="inline-flex items-center underline underline-offset-4 hover:text-blue-800 transition-colors"
+          >
+            <p>Brian Deksnys's map The Weakest Link</p>
+            <ExternalLink className="w-4 h-4 stroke-[1.7]" />
+          </a>{' '}
+          for Warcraft 3
+        </p>
       </div>
       <div className="relative basis-2/3 bg-blue-300 flex flex-col justify-center items-center">
         <Suspense fallback={<Loader className="w-32" />}>
