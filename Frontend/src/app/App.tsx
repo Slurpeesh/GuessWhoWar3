@@ -42,7 +42,7 @@ export default function App() {
   const dissapointEndAudRef: MutableRefObject<HTMLAudioElement> =
     useRef(dissapointEndAud)
   const volumeRef: MutableRefObject<number> = useRef(volume)
-  const scrollAreaRef = useRef(null)
+  const scrollAreaRef: MutableRefObject<HTMLDivElement> = useRef(null)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -75,8 +75,10 @@ export default function App() {
             scrollAreaRef.current.scrollTop -
             scrollAreaRef.current.clientHeight
         ) < 60
-      if (isAtBottom) {
-        scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+      if (isAtBottom || senderId === socket.id) {
+        setTimeout(() => {
+          scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+        })
       }
     }
 
