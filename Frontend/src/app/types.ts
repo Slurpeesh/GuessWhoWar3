@@ -1,7 +1,7 @@
 import { IGuesses, IPlayer, IRoomConfig, IStage } from '@/global'
 
 export interface ServerToClientEvents {
-  message: (msg: string) => void
+  message: (value: string, senderId: string, senderName: string) => void
   playerData: (players: Array<IPlayer>) => void
   stageConfirm: (stage: IStage) => void
   roomExists: () => void
@@ -21,7 +21,7 @@ export interface ServerToClientEvents {
 }
 
 export interface ClientToServerEvents {
-  createMessage: (msg: string) => void
+  createMessage: (value: string, name: string) => void
   hostGame: (name: string, roomConfig: IRoomConfig) => void
   joinGame: (name: string, roomId: string) => void
   leaveLobby: (userId: string, role: 'host' | 'player') => void

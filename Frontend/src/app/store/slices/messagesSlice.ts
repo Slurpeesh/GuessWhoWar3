@@ -2,6 +2,8 @@ import { RootState } from '@/app/store'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 interface IMessage {
+  senderId: string
+  senderName: string
   value: string
 }
 
@@ -20,9 +22,12 @@ export const messagesSlice = createSlice({
     addMessage: (state, payload: PayloadAction<IMessage>) => {
       state.value.push(payload.payload)
     },
+    deleteMessages: (state) => {
+      state.value = []
+    },
   },
 })
 
-export const { addMessage } = messagesSlice.actions
+export const { addMessage, deleteMessages } = messagesSlice.actions
 export const selectMessages = (state: RootState) => state.messages.value
 export default messagesSlice.reducer

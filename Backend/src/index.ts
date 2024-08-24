@@ -47,8 +47,8 @@ const io = new Server<
 const rooms: Map<string, IRoomsMapValue> = new Map()
 
 io.on('connection', (socket) => {
-  socket.on('createMessage', (msg: string) => {
-    io.to(socket.data.room).emit('message', msg)
+  socket.on('createMessage', (value: string, name: string) => {
+    io.to(socket.data.room).emit('message', value, socket.id, name)
   })
 
   socket.on('hostGame', (name: string, roomConfig) => {

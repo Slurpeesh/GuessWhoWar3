@@ -12,7 +12,7 @@ import { socket } from './socket'
 import { hideError, showError } from './store/slices/errorSlice'
 import { setConnected } from './store/slices/isConnectedSlice'
 import { setNullifyPoints, setPlayers } from './store/slices/lobbyPlayers'
-import { addMessage } from './store/slices/messagesSlice'
+import { addMessage, deleteMessages } from './store/slices/messagesSlice'
 import {
   setRoomId,
   setRoomMaxPlayers,
@@ -42,6 +42,7 @@ export default function App() {
   const dissapointEndAudRef: MutableRefObject<HTMLAudioElement> =
     useRef(dissapointEndAud)
   const volumeRef: MutableRefObject<number> = useRef(volume)
+  const scrollAreaRef = useRef(null)
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -66,9 +67,17 @@ export default function App() {
       dispatch(setConnected(false))
     }
 
-    function onMessage(value: string) {
-      console.log(value)
-      dispatch(addMessage({ value }))
+    function onMessage(value: string, senderId: string, senderName: string) {
+      dispatch(addMessage({ value, senderId, senderName }))
+      const isAtBottom =
+        Math.abs(
+          scrollAreaRef.current.scrollHeight -
+            scrollAreaRef.current.scrollTop -
+            scrollAreaRef.current.clientHeight
+        ) < 60
+      if (isAtBottom) {
+        scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+      }
     }
 
     function onPlayerData(players: Array<IPlayer>) {
@@ -82,6 +91,7 @@ export default function App() {
         }
         dispatch(setStage('init'))
         dispatch(setRoundInit())
+        dispatch(deleteMessages())
         currentRound.current = 1
         navigate('/')
       }
@@ -257,7 +267,7 @@ export default function App() {
         </div>
       )}
       <Suspense fallback={<Loader className="w-32" />}>
-        <Outlet />
+        <Outlet context={scrollAreaRef} />
       </Suspense>
       {process.env.NODE_ENV === 'development' && <Dev />}
       <SoundVolumeSlider className="absolute bottom-5 right-5 w-60" />

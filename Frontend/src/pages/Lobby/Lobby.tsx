@@ -15,11 +15,19 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/shared/Tooltip/Tooltip'
+import LobbyChat from '@/widgets/LobbyChat/LobbyChat'
 import LobbyPlayers from '@/widgets/LobbyPlayers/LobbyPlayers'
 import UnitToggleGroup from '@/widgets/UnitToggleGroup/UnitToggleGroup'
 import { AudioLines, Copy, CopyCheck, LogOut } from 'lucide-react'
-import { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import {
+  LegacyRef,
+  MutableRefObject,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 
 export default function Lobby() {
   const lobbyPlayers = useAppSelector((state) => state.lobbyPlayers.value)
@@ -35,6 +43,7 @@ export default function Lobby() {
   const [copied, setCopied] = useState(false)
   const timeoutID: MutableRefObject<ReturnType<typeof setTimeout>> =
     useRef(undefined)
+  const scrollAreaRef: LegacyRef<HTMLDivElement> = useOutletContext()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
 
@@ -181,6 +190,7 @@ export default function Lobby() {
         <p>Leave</p>
         <LogOut />
       </button>
+      <LobbyChat ref={scrollAreaRef} className="absolute bottom-5 left-5" />
       {round.started && (
         <div className="relative z-10">
           <p className="text-xl font-bold text-center">
