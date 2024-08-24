@@ -1,12 +1,14 @@
 import { RootState } from '@/app/store'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+const volume = Number(localStorage.getItem('volume')) ?? 0.5
+
 export interface IVolumeSlice {
   value: number
 }
 
 const initialState: IVolumeSlice = {
-  value: 1,
+  value: volume,
 }
 
 export const volumeSlice = createSlice({
@@ -15,6 +17,7 @@ export const volumeSlice = createSlice({
   reducers: {
     setVolume: (state, payload: PayloadAction<number>) => {
       state.value = payload.payload
+      localStorage.setItem('volume', `${payload.payload}`)
     },
   },
 })

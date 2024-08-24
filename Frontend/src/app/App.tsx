@@ -260,7 +260,7 @@ export default function App() {
         <Outlet />
       </Suspense>
       {process.env.NODE_ENV === 'development' && <Dev />}
-      <SoundVolumeSlider className="absolute bottom-5 right-5 w-80" />
+      <SoundVolumeSlider className="absolute bottom-5 right-5 w-60" />
       {!isConnected && (
         <div className="absolute z-50 top-0 left-0 w-dvw h-dvh bg-slate-300/80 flex flex-col gap-5 justify-center items-center">
           <Loader />

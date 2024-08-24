@@ -201,22 +201,6 @@ export default function Lobby() {
         </p>
       )}
       {lobbyPlayers.length !== 0 && <LobbyPlayers />}
-      {user.role === 'host' && stage === 'lobby' && (
-        <button
-          className="relative z-10 bg-green-800 p-2 text-slate-200 rounded-lg"
-          onClick={() => onStart()}
-        >
-          Start
-        </button>
-      )}
-      {user.role === 'host' && stage === 'results' && (
-        <button
-          className="relative z-10 bg-green-800 p-2 text-slate-200 rounded-lg"
-          onClick={() => onToLobby()}
-        >
-          To lobby
-        </button>
-      )}
       {stage === 'lobby' && (
         <TooltipProvider>
           <Tooltip open={copied ? true : undefined}>
@@ -234,6 +218,22 @@ export default function Lobby() {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+      )}
+      {user.role === 'host' && stage === 'lobby' && (
+        <button
+          className="relative z-10 bg-green-800 p-2 text-slate-200 rounded-lg"
+          onClick={() => onStart()}
+        >
+          Start
+        </button>
+      )}
+      {user.role === 'host' && stage === 'results' && (
+        <button
+          className="relative z-10 bg-green-800 p-2 text-slate-200 rounded-lg"
+          onClick={() => onToLobby()}
+        >
+          To lobby
+        </button>
       )}
       {stage === 'results' && user.role === 'player' && (
         <p className="relative z-10">Waiting for host to return to lobby...</p>
