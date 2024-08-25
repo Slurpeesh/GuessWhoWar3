@@ -175,7 +175,7 @@ export default function Lobby() {
   }
 
   return (
-    <div className="relative flex flex-grow flex-col justify-center items-center">
+    <div className="relative flex gap-2 flex-grow flex-col justify-center items-center">
       <div
         className="absolute right-0 top-0 h-full w-full bg-cover bg-center mix-blend-soft-light"
         style={{
@@ -184,7 +184,7 @@ export default function Lobby() {
       ></div>
       <button
         ref={leaveButtonRef}
-        className="absolute top-5 left-5 flex items-center gap-2 bg-red-800 p-2 text-slate-200 rounded-lg"
+        className="absolute top-5 left-5 flex items-center gap-2 bg-red-800 hover:bg-red-700 disabled:bg-slate-500 transition-colors p-2 text-slate-200 rounded-lg"
         onClick={() => onLeaveButtonHandler()}
       >
         <p>Leave</p>
@@ -231,7 +231,7 @@ export default function Lobby() {
       )}
       {user.role === 'host' && stage === 'lobby' && (
         <button
-          className="relative z-10 bg-green-800 p-2 text-slate-200 rounded-lg"
+          className="relative z-10 bg-green-800 hover:bg-green-700 transition-colors p-2 text-slate-200 rounded-lg"
           onClick={() => onStart()}
         >
           Start
@@ -239,7 +239,7 @@ export default function Lobby() {
       )}
       {user.role === 'host' && stage === 'results' && (
         <button
-          className="relative z-10 bg-green-800 p-2 text-slate-200 rounded-lg"
+          className="relative z-10 bg-green-800 hover:bg-green-700 transition-colors p-2 text-slate-200 rounded-lg"
           onClick={() => onToLobby()}
         >
           To lobby

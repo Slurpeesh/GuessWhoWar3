@@ -28,7 +28,10 @@ export default function LobbyChatForm() {
         placeholder="Throm'ka"
       />
 
-      <button className="p-1 px-2 bg-blue-200 rounded-md" type="submit">
+      <button
+        className="p-1 px-2 bg-blue-200 hover:bg-blue-300 transition-colors rounded-md"
+        type="submit"
+      >
         <SendHorizontal className="w-5 h-5" />
       </button>
     </form>

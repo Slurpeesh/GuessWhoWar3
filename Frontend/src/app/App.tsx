@@ -261,7 +261,7 @@ export default function App() {
   }, [])
 
   return (
-    <div className="w-dvw h-dvh flex bg-blue-500">
+    <div className="w-dvw h-dvh flex bg-blue-300">
       {error.isVisible && (
         <div className="absolute z-50 top-5 right-5 flex items-center gap-2 bg-red-400 p-2 rounded-lg">
           <CircleAlert />
