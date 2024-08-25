@@ -14,8 +14,8 @@ export const stageSlice = createSlice({
   name: 'stage',
   initialState,
   reducers: {
-    setStage: (state, payload: PayloadAction<IStage>) => {
-      state.value = payload.payload
+    setStage: (state, action: PayloadAction<IStage>) => {
+      state.value = action.payload
     },
   },
 })

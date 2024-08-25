@@ -14,14 +14,14 @@ export const roomConfigSlice = createSlice({
   name: 'roomConfig',
   initialState,
   reducers: {
-    setRoomId: (state, payload: PayloadAction<string>) => {
-      state.value.id = payload.payload
+    setRoomId: (state, action: PayloadAction<string>) => {
+      state.value.id = action.payload
     },
-    setRoomRounds: (state, payload: PayloadAction<number>) => {
-      state.value.rounds = payload.payload
+    setRoomRounds: (state, action: PayloadAction<number>) => {
+      state.value.rounds = action.payload
     },
-    setRoomMaxPlayers: (state, payload: PayloadAction<number>) => {
-      state.value.maxPlayers = payload.payload
+    setRoomMaxPlayers: (state, action: PayloadAction<number>) => {
+      state.value.maxPlayers = action.payload
     },
   },
 })

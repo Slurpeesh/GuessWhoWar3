@@ -19,8 +19,8 @@ export const messagesSlice = createSlice({
   name: 'messages',
   initialState,
   reducers: {
-    addMessage: (state, payload: PayloadAction<IMessage>) => {
-      state.value.push(payload.payload)
+    addMessage: (state, action: PayloadAction<IMessage>) => {
+      state.value.push(action.payload)
     },
     deleteMessages: (state) => {
       state.value = []

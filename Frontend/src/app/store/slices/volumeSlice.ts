@@ -15,9 +15,9 @@ export const volumeSlice = createSlice({
   name: 'volume',
   initialState,
   reducers: {
-    setVolume: (state, payload: PayloadAction<number>) => {
-      state.value = payload.payload
-      localStorage.setItem('volume', `${payload.payload}`)
+    setVolume: (state, action: PayloadAction<number>) => {
+      state.value = action.payload
+      localStorage.setItem('volume', `${action.payload}`)
     },
   },
 })

@@ -23,23 +23,23 @@ export const roundSlice = createSlice({
   name: 'round',
   initialState,
   reducers: {
-    setRound: (state, payload: PayloadAction<number>) => {
-      state.value.currentRound = payload.payload
+    setRound: (state, action: PayloadAction<number>) => {
+      state.value.currentRound = action.payload
     },
-    setChosenUnit: (state, payload: PayloadAction<string>) => {
-      state.value.chosenUnit = payload.payload
+    setChosenUnit: (state, action: PayloadAction<string>) => {
+      state.value.chosenUnit = action.payload
     },
-    setTimeLeft: (state, payload: PayloadAction<number>) => {
-      state.value.timeLeft = payload.payload
+    setTimeLeft: (state, action: PayloadAction<number>) => {
+      state.value.timeLeft = action.payload
     },
-    setRoundStarted: (state, payload: PayloadAction<boolean>) => {
-      state.value.started = payload.payload
+    setRoundStarted: (state, action: PayloadAction<boolean>) => {
+      state.value.started = action.payload
     },
-    setRoundSound: (state, payload: PayloadAction<string>) => {
-      state.value.soundUrl = payload.payload
+    setRoundSound: (state, action: PayloadAction<string>) => {
+      state.value.soundUrl = action.payload
     },
-    setRightAnswer: (state, payload: PayloadAction<string>) => {
-      state.value.rightAnswer = payload.payload
+    setRightAnswer: (state, action: PayloadAction<string>) => {
+      state.value.rightAnswer = action.payload
     },
     setRoundInit: (state) => {
       state.value = {

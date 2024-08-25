@@ -18,8 +18,8 @@ export const errorSlice = createSlice({
   name: 'error',
   initialState,
   reducers: {
-    showError: (state, payload: PayloadAction<string>) => {
-      state.value.text = payload.payload
+    showError: (state, action: PayloadAction<string>) => {
+      state.value.text = action.payload
       state.value.isVisible = true
     },
     hideError: (state) => {

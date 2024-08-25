@@ -21,15 +21,15 @@ export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    changeUserName: (state, payload: PayloadAction<string>) => {
-      state.value.name = payload.payload
-      localStorage.setItem('name', payload.payload)
+    changeUserName: (state, action: PayloadAction<string>) => {
+      state.value.name = action.payload
+      localStorage.setItem('name', action.payload)
     },
-    setUserId: (state, payload: PayloadAction<string>) => {
-      state.value.id = payload.payload
+    setUserId: (state, action: PayloadAction<string>) => {
+      state.value.id = action.payload
     },
-    setRole: (state, payload: PayloadAction<'host' | 'player'>) => {
-      state.value.role = payload.payload
+    setRole: (state, action: PayloadAction<'host' | 'player'>) => {
+      state.value.role = action.payload
     },
   },
 })
