@@ -50,21 +50,23 @@ io.on('connection', (socket) => {
   socket.on('disconnecting', () => {
     if (socket.data.room) {
       const roomId = socket.data.room
-      const room = rooms.get(roomId) as IRoomsMapValue
-      const client = room.clients.find((client) => client.id === socket.id)
-      if (client && client.role === 'host') {
-        io.to(roomId).emit('playerData', [])
-        io.in(roomId).socketsLeave(roomId)
-        rooms.delete(roomId)
-      } else {
-        let clients = rooms.get(roomId)!.clients
-        rooms.get(roomId)!.clients = clients.filter((client) => {
-          if (client) return client.id !== socket.id
-        })
-        clients = rooms.get(roomId)!.clients
-        io.to(roomId).emit('playerData', clients)
-        socket.emit('playerData', [])
-        socket.leave(roomId)
+      const room = rooms.get(roomId)
+      if (room !== undefined) {
+        const client = room.clients.find((client) => client.id === socket.id)
+        if (client && client.role === 'host') {
+          io.to(roomId).emit('playerData', [])
+          io.in(roomId).socketsLeave(roomId)
+          rooms.delete(roomId)
+        } else {
+          let clients = room.clients
+          room.clients = clients.filter((client) => {
+            if (client) return client.id !== socket.id
+          })
+          clients = room.clients
+          io.to(roomId).emit('playerData', clients)
+          socket.emit('playerData', [])
+          socket.leave(roomId)
+        }
       }
     }
   })
