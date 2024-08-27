@@ -52,7 +52,7 @@ io.on('connection', (socket) => {
       const roomId = socket.data.room
       const room = rooms.get(roomId) as IRoomsMapValue
       const client = room.clients.find((client) => client.id === socket.id)
-      if (client!.role === 'host') {
+      if (client && client.role === 'host') {
         io.to(roomId).emit('playerData', [])
         io.in(roomId).socketsLeave(roomId)
         rooms.delete(roomId)
