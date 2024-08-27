@@ -268,7 +268,13 @@ export default function App() {
           <p className="font-semibold">{error.text}</p>
         </div>
       )}
-      <Suspense fallback={<Loader className="w-32" />}>
+      <Suspense
+        fallback={
+          <div className="absolute z-50 top-0 left-0 w-dvw h-dvh flex justify-center items-center">
+            <Loader className="w-32" />
+          </div>
+        }
+      >
         <Outlet context={scrollAreaRef} />
       </Suspense>
       {process.env.NODE_ENV === 'development' && <Dev />}

@@ -56,7 +56,7 @@ export default function EntryPage() {
         ></div>
       </div>
       <div className="relative basis-2/3 bg-blue-300 flex flex-col justify-center items-center">
-        <Suspense fallback={<Loader className="w-32" />}>
+        <Suspense fallback={<Loader className="relative z-50 w-32" />}>
           <Outlet />
         </Suspense>
         <div
