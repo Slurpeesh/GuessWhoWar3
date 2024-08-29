@@ -6,16 +6,20 @@
   "scripts": {
     "build": "tsc",
     "setup": "tsc && node dist/index.js",
-    "start": "cross-env PORT=6122 nodemon src/index.ts"
+    "start": "cross-env PORT=6122 nodemon src/index.ts",
+    "test": "jest"
   },
   "keywords": [],
   "author": "Slurpeesh",
   "license": "ISC",
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
     "@types/node": "^22.4.0",
     "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.4",
+    "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   },
