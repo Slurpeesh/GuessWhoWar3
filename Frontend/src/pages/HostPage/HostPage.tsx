@@ -69,7 +69,7 @@ export default function HostPage() {
         {(user.name.length === 0 ||
           roomConfig.maxPlayers === 0 ||
           roomConfig.rounds === 0) && (
-          <div className="min-h-0 text-xl font-semibold text-red-800">
+          <div className="min-h-0 text-xl font-semibold text-danger-hover">
             {user.name.length === 0 && <p>Name is empty</p>}
             {roomConfig.maxPlayers === 0 && (
               <p>Max players must be at least 1</p>
@@ -83,7 +83,7 @@ export default function HostPage() {
             Your name:
           </label>
           <input
-            className="col-span-2 ml-2 rounded-md p-1"
+            className="col-span-2 ml-2 rounded-md p-1 bg-muted"
             id="name"
             type="text"
             value={user.name}
@@ -93,9 +93,10 @@ export default function HostPage() {
           <label className="content-center" htmlFor="roomId">
             Room ID:
           </label>
-          <div className="col-span-2 ml-2 rounded-md p-1 flex bg-white">
+          <div className="col-span-2 ml-2 rounded-md p-1 flex bg-muted">
             <input
               id="roomId"
+              className="bg-muted"
               type="text"
               value={roomConfig.id}
               onChange={(e) => onChangeRoomId(e)}
@@ -110,7 +111,7 @@ export default function HostPage() {
             Rounds:
           </label>
           <input
-            className="col-span-2 ml-2 rounded-md p-1"
+            className="col-span-2 ml-2 rounded-md p-1 bg-muted"
             id="rounds"
             type="text"
             value={roomConfig.rounds}
@@ -121,7 +122,7 @@ export default function HostPage() {
             Max players:
           </label>
           <input
-            className="col-span-2 ml-2 rounded-md p-1"
+            className="col-span-2 ml-2 rounded-md p-1 bg-muted"
             id="maxPlayers"
             type="text"
             value={roomConfig.maxPlayers}
@@ -129,7 +130,7 @@ export default function HostPage() {
             onChange={(e) => onChangeMaxPlayers(e)}
           />
         </div>
-        <button className="bg-blue-200 rounded-md p-2 hover:bg-blue-300 transition-colors w-1/2">
+        <button className="bg-accent text-foreground-within-accent rounded-md p-2 hover:bg-accent-hover transition-colors w-1/2">
           Host
         </button>
       </form>

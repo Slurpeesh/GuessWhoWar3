@@ -184,7 +184,7 @@ export default function Lobby() {
       ></div>
       <button
         ref={leaveButtonRef}
-        className="absolute top-5 left-5 flex items-center gap-2 bg-red-800 hover:bg-red-700 disabled:bg-slate-500 transition-colors p-2 text-slate-200 rounded-lg"
+        className="absolute top-5 left-5 flex items-center gap-2 bg-danger hover:bg-danger-hover disabled:bg-muted transition-colors p-2 rounded-lg"
         onClick={() => onLeaveButtonHandler()}
       >
         <p>Leave</p>
@@ -198,7 +198,7 @@ export default function Lobby() {
           </p>
           <button
             onClick={() => repeatSoundForRound()}
-            className="bg-yellow-400 p-2 rounded-lg flex justify-between items-center gap-2"
+            className="bg-alert p-2 rounded-lg flex justify-between items-center gap-2"
           >
             <p>Repeat sound</p>
             <AudioLines />
@@ -216,7 +216,7 @@ export default function Lobby() {
           <Tooltip open={copied ? true : undefined}>
             <TooltipTrigger className="relative z-10" asChild>
               <button
-                className="rounded-md p-1 bg-blue-200 flex justify-center items-center gap-2 font-bold"
+                className="rounded-md p-1 bg-muted flex justify-center items-center gap-2 font-bold"
                 onClick={() => onCopyButtonClick()}
               >
                 <p className="uppercase">Share: {roomConfig.id}</p>
@@ -231,7 +231,7 @@ export default function Lobby() {
       )}
       {user.role === 'host' && stage === 'lobby' && (
         <button
-          className="relative z-10 bg-green-800 hover:bg-green-700 transition-colors p-2 text-slate-200 rounded-lg"
+          className="relative z-10 bg-success hover:bg-success-hover transition-colors p-2 rounded-lg"
           onClick={() => onStart()}
         >
           Start
@@ -239,7 +239,7 @@ export default function Lobby() {
       )}
       {user.role === 'host' && stage === 'results' && (
         <button
-          className="relative z-10 bg-green-800 hover:bg-green-700 transition-colors p-2 text-slate-200 rounded-lg"
+          className="relative z-10 bg-success hover:bg-success-hover transition-colors p-2 rounded-lg"
           onClick={() => onToLobby()}
         >
           To lobby

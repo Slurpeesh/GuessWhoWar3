@@ -17,7 +17,7 @@ export default function LobbyPlayers() {
         }
       )}
     >
-      <div className="absolute bg-blue-200/30 backdrop-blur-sm top-0 left-0 w-full h-full"></div>
+      <div className="absolute bg-accent/30 backdrop-blur-sm top-0 left-0 w-full h-full"></div>
       {lobbyPlayers.map((player, index, arr) => {
         const pointsOfPlayer = player.points
         let isWinner: boolean = true
@@ -31,23 +31,23 @@ export default function LobbyPlayers() {
             className={cn(
               'relative z-10 py-1 px-2 rounded-lg w-full flex gap-2 justify-between',
               {
-                'bg-green-400/50': player.id === user.id,
-                'ring-2 ring-yellow-500 bg-gradient-to-br from-green-400 to-yellow-500':
+                'bg-success/50': player.id === user.id,
+                'ring-2 ring-alert bg-gradient-to-br from-success to-alert':
                   isWinner &&
                   stage === 'results' &&
                   player.id === socket.id &&
                   pointsOfPlayer > 0,
-                'ring-2 ring-yellow-500 bg-gradient-to-br from-blue-200 to-yellow-500':
+                'ring-2 ring-alert bg-gradient-to-br from-accent/30 to-alert':
                   isWinner &&
                   stage === 'results' &&
                   player.id !== socket.id &&
                   pointsOfPlayer > 0,
-                'ring-2 ring-red-500 bg-gradient-to-br from-green-400 to-red-500':
+                'ring-2 ring-danger bg-gradient-to-br from-success to-danger':
                   isWinner &&
                   stage === 'results' &&
                   player.id === socket.id &&
                   pointsOfPlayer === 0,
-                'ring-2 ring-red-500 bg-gradient-to-br from-blue-200 to-red-500':
+                'ring-2 ring-danger bg-gradient-to-br from-accent/30 to-danger':
                   isWinner &&
                   stage === 'results' &&
                   player.id !== socket.id &&

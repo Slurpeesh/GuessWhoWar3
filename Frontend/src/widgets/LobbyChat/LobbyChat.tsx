@@ -22,7 +22,7 @@ const LobbyChat = forwardRef(function LobbyChat(
           {messages.map((message, index, arr) => {
             console.log(message.senderId === socket.id)
             const messageClassName = cn(
-              'p-2 my-1 rounded-lg w-2/3 break-all bg-blue-200/30 backdrop-blur-sm transition-colors'
+              'p-2 my-1 rounded-lg w-2/3 break-all bg-accent/30 backdrop-blur-sm transition-colors'
             )
             return (
               <div

@@ -4,6 +4,7 @@ import messagesReducer from '@/app/store/slices/messagesSlice'
 import roomConfigReducer from '@/app/store/slices/roomConfigSlice'
 import roundReducer from '@/app/store/slices/roundSlice'
 import stageReducer from '@/app/store/slices/stageSlice'
+import themeReducer from '@/app/store/slices/themeSlice'
 import userReducer from '@/app/store/slices/userSlice'
 import volumeReducer from '@/app/store/slices/volumeSlice'
 import { configureStore } from '@reduxjs/toolkit'
@@ -20,6 +21,7 @@ export const store = configureStore({
     stage: stageReducer,
     round: roundReducer,
     volume: volumeReducer,
+    theme: themeReducer,
   },
 })
 

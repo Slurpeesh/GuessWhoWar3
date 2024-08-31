@@ -13,6 +13,16 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import LazyApp from './App.lazy'
 import { store } from './store'
 
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register(new URL('@/app/workers/sw_images.ts', import.meta.url))
+      .catch((error) => {
+        console.log('ServiceWorker registration failed: ', error)
+      })
+  })
+}
+
 const root = document.getElementById('root')
 
 if (!root) {
@@ -58,13 +68,3 @@ container.render(
     <RouterProvider router={router} />
   </Provider>
 )
-
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register(new URL('@/app/workers/sw_images.ts', import.meta.url))
-      .catch((error) => {
-        console.log('ServiceWorker registration failed: ', error)
-      })
-  })
-}

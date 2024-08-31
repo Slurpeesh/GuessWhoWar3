@@ -9,7 +9,7 @@ export default function Loader({ className }: ILoader) {
     <svg
       aria-hidden="true"
       className={cn(
-        'w-48 aspect-square text-slate-400 animate-spin fill-blue-800',
+        'w-48 aspect-square text-muted animate-spin fill-accent',
         className
       )}
       viewBox="0 0 100 101"

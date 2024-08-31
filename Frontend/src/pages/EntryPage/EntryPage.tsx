@@ -7,16 +7,16 @@ import { NavLink, Outlet } from 'react-router-dom'
 export default function EntryPage() {
   return (
     <>
-      <div className="relative basis-1/3 bg-blue-300 flex justify-center items-center">
+      <div className="relative basis-1/3 bg-background flex justify-center items-center">
         <div className="relative z-10 flex flex-col gap-5 justify-center items-center">
           <h1 className="text-3xl font-bold">GuessWhoWar3</h1>
           <NavLink
             className={({ isActive }) => {
               return [
-                'p-2 rounded-lg text-slate-200 w-52 text-center',
+                'p-2 rounded-lg w-52 text-center text-foreground-within-accent',
                 isActive
-                  ? 'bg-blue-700'
-                  : 'bg-blue-900 hover:bg-blue-700 transition-colors',
+                  ? 'bg-accent-hover'
+                  : 'bg-accent hover:bg-accent-hover transition-colors',
               ].join(' ')
             }}
             to="/host"
@@ -26,10 +26,10 @@ export default function EntryPage() {
           <NavLink
             className={({ isActive }) => {
               return [
-                'p-2 rounded-lg text-slate-200 w-52 text-center',
+                'p-2 rounded-lg w-52 text-center text-foreground-within-accent',
                 isActive
-                  ? 'bg-blue-700'
-                  : 'bg-blue-900 hover:bg-blue-700 transition-colors',
+                  ? 'bg-accent-hover'
+                  : 'bg-accent hover:bg-accent-hover transition-colors',
               ].join(' ')
             }}
             to="/join"
@@ -41,7 +41,7 @@ export default function EntryPage() {
             <a
               href="https://www.hiveworkshop.com/threads/the-weakest-link-v1-01.78089/"
               target="_blank"
-              className="inline-flex items-center underline underline-offset-4 hover:text-blue-900"
+              className="inline-flex items-center underline underline-offset-4 hover:text-accent-hover"
             >
               <span>Brian Deksnys's map The Weakest Link</span>
               <ExternalLink className="w-4 h-4 stroke-[1.5]" />
@@ -51,11 +51,11 @@ export default function EntryPage() {
         </div>
 
         <div
-          className="absolute left-0 top-0 h-full w-full bg-cover bg-left mix-blend-lighten"
+          className="absolute left-0 top-0 h-full w-full bg-cover bg-left mix-blend-lighten dark:mix-blend-soft-light"
           style={{ backgroundImage: `url(${bgTwl})` }}
         ></div>
       </div>
-      <div className="relative basis-2/3 bg-blue-300 flex flex-col justify-center items-center">
+      <div className="relative basis-2/3 bg-background flex flex-col justify-center items-center">
         <Suspense fallback={<Loader className="relative z-50 w-32" />}>
           <Outlet />
         </Suspense>

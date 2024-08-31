@@ -1,5 +1,6 @@
 import Loader from '@/entities/Loader/Loader'
 import SoundVolumeSlider from '@/features/SoundVolumeSlider/SoundVolumeSlider'
+import ThemeButton from '@/features/ThemeButton/ThemeButton'
 import { IGuesses, IPlayer, IRoomConfig, IStage } from '@/global'
 import Dev from '@/pages/Dev/Dev'
 import { CircleAlert } from 'lucide-react'
@@ -261,9 +262,10 @@ export default function App() {
   }, [])
 
   return (
-    <div className="w-dvw h-dvh flex bg-blue-300">
+    <div className="w-dvw h-dvh flex text-foreground bg-background">
+      {process.env.NODE_ENV === 'development' && <ThemeButton />}
       {error.isVisible && (
-        <div className="absolute z-50 top-5 right-5 flex items-center gap-2 bg-red-400 p-2 rounded-lg">
+        <div className="absolute z-50 top-5 right-5 flex items-center gap-2 bg-danger p-2 rounded-lg">
           <CircleAlert />
           <p className="font-semibold">{error.text}</p>
         </div>
@@ -280,7 +282,7 @@ export default function App() {
       {process.env.NODE_ENV === 'development' && <Dev />}
       <SoundVolumeSlider className="absolute bottom-5 right-5 w-60" />
       {!isConnected && (
-        <div className="absolute z-50 top-0 left-0 w-dvw h-dvh bg-slate-300/80 flex flex-col gap-5 justify-center items-center">
+        <div className="absolute z-50 top-0 left-0 w-dvw h-dvh bg-muted/80 flex flex-col gap-5 justify-center items-center">
           <Loader />
           <p className="text-xl">Connecting...</p>
         </div>

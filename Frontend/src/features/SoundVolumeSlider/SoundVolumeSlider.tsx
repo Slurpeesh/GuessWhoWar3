@@ -31,34 +31,34 @@ export default function SoundVolumeSlider({ className }: ISoundVolumeSlider) {
     <div className={cn('flex gap-2', className)}>
       {volume === 0 && (
         <button
-          className="rounded-full hover:bg-blue-300/70 focus-visible:bg-blue-300/70 transition-colors p-1"
+          className="rounded-full hover:bg-muted/70 focus-visible:bg-muted/70 transition-colors p-1"
           onClick={() => onResetVolume()}
         >
-          <VolumeX className="stroke-red-900" />
+          <VolumeX className="stroke-danger-hover" />
         </button>
       )}
       {volume > 0 && volume <= 0.33 && (
         <button
-          className="rounded-full hover:bg-blue-300/70 focus-visible:bg-blue-300/70 transition-colors p-1"
+          className="rounded-full hover:bg-muted/70 focus-visible:bg-muted/70 transition-colors p-1"
           onClick={() => onMuteVolume()}
         >
-          <Volume className="stroke-blue-900" />
+          <Volume className="stroke-accent" />
         </button>
       )}
       {volume > 0.33 && volume <= 0.66 && (
         <button
-          className="rounded-full hover:bg-blue-300/70 focus-visible:bg-blue-300/70 transition-colors p-1"
+          className="rounded-full hover:bg-muted/70 focus-visible:bg-muted/70 transition-colors p-1"
           onClick={() => onMuteVolume()}
         >
-          <Volume1 className="stroke-blue-900" />
+          <Volume1 className="stroke-accent" />
         </button>
       )}
       {volume > 0.66 && (
         <button
-          className="rounded-full hover:bg-blue-300/70 focus-visible:bg-blue-300/70 transition-colors p-1"
+          className="rounded-full hover:bg-muted/70 focus-visible:bg-muted/70 transition-colors p-1"
           onClick={() => onMuteVolume()}
         >
-          <Volume2 className="stroke-blue-900" />
+          <Volume2 className="stroke-accent" />
         </button>
       )}
       <Slider

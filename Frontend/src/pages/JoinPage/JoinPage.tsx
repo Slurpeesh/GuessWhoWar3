@@ -38,7 +38,7 @@ export default function JoinPage() {
             Your name:
           </label>
           <input
-            className="col-span-2 ml-2 rounded-md p-1"
+            className="col-span-2 ml-2 rounded-md p-1 bg-muted"
             id="name"
             type="text"
             value={user.name}
@@ -49,7 +49,7 @@ export default function JoinPage() {
             Room ID:
           </label>
           <input
-            className="col-span-2 ml-2 rounded-md p-1"
+            className="col-span-2 ml-2 rounded-md p-1 bg-muted"
             id="roomId"
             type="text"
             value={joinRoomId}
@@ -57,7 +57,7 @@ export default function JoinPage() {
             onChange={(e) => onChangeRoomId(e)}
           />
         </div>
-        <button className="bg-blue-200 rounded-md p-2 hover:bg-blue-300 transition-colors w-1/2">
+        <button className="bg-accent text-foreground-within-accent rounded-md p-2 hover:bg-accent-hover transition-colors w-1/2">
           Join
         </button>
       </form>

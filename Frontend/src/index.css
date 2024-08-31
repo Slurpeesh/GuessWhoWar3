@@ -17,3 +17,33 @@
 .animate-border-glow {
   animation: border-glow 0.9s infinite;
 }
+
+@layer base {
+  :root {
+    --color-background: 212 96% 78%;
+    --color-foreground: 0 0% 10%;
+    --color-foreground-within-accent: 0 0% 90%;
+    --color-accent: 221 83% 33%;
+    --color-accent-hover: 221 83% 53%;
+    --color-muted: 0 0% 95%;
+    --color-alert: 47 90% 64%;
+    --color-danger: 0 72% 61%;
+    --color-danger-hover: 0 72% 41%;
+    --color-success: 142 71% 45%;
+    --color-success-hover: 142 71% 55%;
+  }
+
+  .dark {
+    --color-background: 212 96% 10%;
+    --color-foreground: 0 0% 90%;
+    --color-foreground-within-accent: 0 0% 90%;
+    --color-accent: 221 83% 43%;
+    --color-accent-hover: 221 83% 63%;
+    --color-muted: 0 0% 30%;
+    --color-alert: 47 90% 34%;
+    --color-danger: 0 72% 41%;
+    --color-danger-hover: 0 72% 51%;
+    --color-success: 142 71% 25%;
+    --color-success-hover: 142 71% 35%;
+  }
+}
