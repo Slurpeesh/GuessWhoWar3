@@ -2,7 +2,6 @@ import Loader from '@/entities/Loader/Loader'
 import SoundVolumeSlider from '@/features/SoundVolumeSlider/SoundVolumeSlider'
 import ThemeButton from '@/features/ThemeButton/ThemeButton'
 import { IGuesses, IPlayer, IRoomConfig, IStage } from '@/global'
-import Dev from '@/pages/Dev/Dev'
 import { CircleAlert } from 'lucide-react'
 import { MutableRefObject, Suspense, useEffect, useRef } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
@@ -262,7 +261,7 @@ export default function App() {
   }, [])
 
   return (
-    <div className="w-dvw h-dvh flex text-foreground bg-background">
+    <div className="w-dvw h-dvh flex flex-col md:flex-row text-foreground bg-background">
       {error.isVisible && (
         <div className="absolute z-50 top-5 right-5 flex items-center gap-2 bg-danger p-2 rounded-lg">
           <CircleAlert />
@@ -278,9 +277,9 @@ export default function App() {
       >
         <Outlet context={scrollAreaRef} />
       </Suspense>
-      {process.env.NODE_ENV === 'development' && <Dev />}
-      <SoundVolumeSlider className="absolute bottom-5 right-5 w-60" />
-      <ThemeButton className="absolute bottom-14 right-5" />
+      {/* {process.env.NODE_ENV === 'development' && <Dev />} */}
+      <SoundVolumeSlider className="absolute bottom-5 right-5 w-40 md:w-60" />
+      <ThemeButton className="absolute z-50 bottom-14 right-5" />
       {!isConnected && (
         <div className="absolute z-50 top-0 left-0 w-dvw h-dvh bg-muted/80 flex flex-col gap-5 justify-center items-center">
           <Loader />

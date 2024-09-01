@@ -24,17 +24,19 @@ export default function JoinPage() {
   }
 
   return (
-    <div className="relative z-10 flex flex-col justify-center items-center gap-5">
+    <div className="relative z-10 flex flex-col justify-center items-center gap-2 md:gap-5">
       <h2 className="text-3xl font-bold">Join existing lobby</h2>
       {user.name.length === 0 && (
-        <p className="text-xl font-semibold text-red-800">Name is empty</p>
+        <p className="text-base md:text-xl font-semibold text-danger-hover">
+          Name is empty
+        </p>
       )}
       <form
         onSubmit={(e) => onSubmitHandle(e)}
         className="flex flex-col gap-5 items-center text-xl font-medium"
       >
-        <div className="grid grid-cols-3 gap-5">
-          <label className="content-center" htmlFor="name">
+        <div className="grid grid-cols-3 gap-2 md:gap-5">
+          <label className="content-center text-base md:text-lg" htmlFor="name">
             Your name:
           </label>
           <input
@@ -45,7 +47,10 @@ export default function JoinPage() {
             maxLength={20}
             onChange={(e) => onChangeName(e)}
           />
-          <label className="content-center" htmlFor="roomId">
+          <label
+            className="content-center text-base md:text-lg"
+            htmlFor="roomId"
+          >
             Room ID:
           </label>
           <input

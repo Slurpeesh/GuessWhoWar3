@@ -53,9 +53,15 @@ export default function LobbyPlayers() {
               )}
               key={index}
             >
-              <span className="w-40 break-all">Name: {player.name}</span>
-              <span className="w-24 break-words">Role: {player.role}</span>
-              <span className="w-20 break-words">Points: {player.points}</span>
+              <span className="w-32 md:w-40 break-all">
+                Name: {player.name}
+              </span>
+              <span className="w-20 md:w-24 break-words">
+                Role: {player.role}
+              </span>
+              <span className="w-16 md:w-20 break-words">
+                Points: {player.points}
+              </span>
             </li>
           )
         })}

@@ -60,16 +60,16 @@ export default function HostPage() {
   }
 
   return (
-    <div className="relative z-10 flex flex-col justify-center items-center gap-5">
+    <div className="relative z-10 flex flex-col justify-center items-center gap-2 md:gap-5">
       <h2 className="text-3xl font-bold">Host new lobby</h2>
       <form
         onSubmit={(e) => onSubmitHandle(e)}
-        className="flex flex-col gap-5 items-center text-xl font-medium"
+        className="flex flex-col gap-2 md:gap-5 items-center text-xl font-medium"
       >
         {(user.name.length === 0 ||
           roomConfig.maxPlayers === 0 ||
           roomConfig.rounds === 0) && (
-          <div className="min-h-0 text-xl font-semibold text-danger-hover">
+          <div className="min-h-0 text-base md:text-xl font-semibold text-danger-hover">
             {user.name.length === 0 && <p>Name is empty</p>}
             {roomConfig.maxPlayers === 0 && (
               <p>Max players must be at least 1</p>
@@ -78,8 +78,8 @@ export default function HostPage() {
           </div>
         )}
 
-        <div className="grid grid-cols-3 gap-5">
-          <label className="content-center" htmlFor="name">
+        <div className="grid grid-cols-3 gap-2 md:gap-5">
+          <label className="content-center text-base md:text-lg" htmlFor="name">
             Your name:
           </label>
           <input
@@ -90,13 +90,16 @@ export default function HostPage() {
             maxLength={20}
             onChange={(e) => onChangeName(e)}
           />
-          <label className="content-center" htmlFor="roomId">
+          <label
+            className="content-center text-base md:text-lg"
+            htmlFor="roomId"
+          >
             Room ID:
           </label>
           <div className="col-span-2 ml-2 rounded-md p-1 flex bg-muted">
             <input
               id="roomId"
-              className="bg-muted"
+              className="bg-muted w-full"
               type="text"
               value={roomConfig.id}
               onChange={(e) => onChangeRoomId(e)}
@@ -107,7 +110,10 @@ export default function HostPage() {
             </button>
           </div>
 
-          <label className="content-center" htmlFor="rounds">
+          <label
+            className="content-center text-base md:text-lg"
+            htmlFor="rounds"
+          >
             Rounds:
           </label>
           <input
@@ -118,7 +124,10 @@ export default function HostPage() {
             maxLength={2}
             onChange={(e) => onChangeRounds(e)}
           />
-          <label className="content-center" htmlFor="maxPlayers">
+          <label
+            className="content-center text-base md:text-lg"
+            htmlFor="maxPlayers"
+          >
             Max players:
           </label>
           <input

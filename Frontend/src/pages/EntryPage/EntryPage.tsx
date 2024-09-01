@@ -7,7 +7,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 export default function EntryPage() {
   return (
     <>
-      <div className="relative basis-1/3 bg-background flex justify-center items-center">
+      <div className="relative basis-1/3 bg-background flex justify-center items-center p-5">
         <div className="relative z-10 flex flex-col gap-5 justify-center items-center">
           <h1 className="text-3xl font-bold">GuessWhoWar3</h1>
           <NavLink
@@ -55,7 +55,7 @@ export default function EntryPage() {
           style={{ backgroundImage: `url(${bgTwl})` }}
         ></div>
       </div>
-      <div className="relative basis-2/3 bg-background flex flex-col justify-center items-center">
+      <div className="relative basis-2/3 bg-background flex flex-col justify-center items-center p-5">
         <Suspense fallback={<Loader className="relative z-50 w-32" />}>
           <Outlet />
         </Suspense>

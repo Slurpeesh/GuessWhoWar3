@@ -22,14 +22,14 @@ export default function LobbyChatForm() {
   return (
     <form onSubmit={onSubmit} className="flex gap-2 justify-between">
       <input
-        className="bg-muted flex-grow rounded-md px-1"
+        className="min-w-0 bg-muted flex-grow rounded-md px-1"
         ref={inputRef}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Throm'ka"
       />
 
       <button
-        className="p-1 px-2 bg-accent text-foreground-within-accent hover:bg-accent-hover transition-colors rounded-md"
+        className="min-w-9 p-1 px-2 bg-accent text-foreground-within-accent hover:bg-accent-hover transition-colors rounded-md"
         type="submit"
       >
         <SendHorizontal className="w-5 h-5" />

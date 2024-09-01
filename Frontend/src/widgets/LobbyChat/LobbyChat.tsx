@@ -17,8 +17,8 @@ const LobbyChat = forwardRef(function LobbyChat(
   const messages = useAppSelector((state) => state.messages.value)
 
   return (
-    <div className={cn('flex flex-col gap-2', className)}>
-      <ScrollArea ref={ref} className={cn('w-80 h-40 rounded-md pr-4')}>
+    <div className={cn('flex flex-col w-40 md:w-80 gap-2', className)}>
+      <ScrollArea ref={ref} className={cn(' h-40 rounded-md pr-4')}>
         <ul className="text-sm">
           {messages.map((message, index, arr) => {
             return (

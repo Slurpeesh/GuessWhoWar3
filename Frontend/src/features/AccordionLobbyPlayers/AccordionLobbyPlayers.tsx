@@ -23,7 +23,7 @@ export default function AccordionLobbyPlayers() {
     >
       <Accordion className="relative z-20" type="single" collapsible>
         <AccordionItem value="players">
-          <AccordionTrigger className="px-2 mx-1 w-[23rem]">
+          <AccordionTrigger className="px-2 mx-1 w-32 md:w-[23rem]">
             <div className="flex items-center gap-2">
               <span>Players</span>
               <Users className="w-5 h-5" />
@@ -69,11 +69,13 @@ export default function AccordionLobbyPlayers() {
                     )}
                     key={index}
                   >
-                    <span className="w-40 break-all">Name: {player.name}</span>
-                    <span className="w-24 break-words">
+                    <span className="w-24 md:w-40 break-all">
+                      Name: {player.name}
+                    </span>
+                    <span className="w-16 md:w-24 break-words">
                       Role: {player.role}
                     </span>
-                    <span className="w-20 break-words">
+                    <span className="w-16 md:w-20 break-words">
                       Points: {player.points}
                     </span>
                   </li>
