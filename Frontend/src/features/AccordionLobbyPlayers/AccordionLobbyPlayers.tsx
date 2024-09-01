@@ -1,12 +1,14 @@
 import { useAppSelector } from '@/app/hooks/useActions'
 import { cn } from '@/app/lib/utils'
 import { socket } from '@/app/socket'
+import Card from '@/entities/Card/Card'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/shared/Accordion/Accordion'
+import { Users } from 'lucide-react'
 
 export default function AccordionLobbyPlayers() {
   const user = useAppSelector((state) => state.user.value)
@@ -14,27 +16,20 @@ export default function AccordionLobbyPlayers() {
   const lobbyPlayers = useAppSelector((state) => state.lobbyPlayers.value)
 
   return (
-    <div
+    <Card
       className={cn(
-        'shadow-md flex flex-col gap-2 justify-center items-center rounded-lg overflow-hidden p-2',
-        {
-          'relative z-10': stage === 'results',
-          'absolute z-10 top-5 right-5': stage !== 'results',
-        }
+        'absolute z-20 top-5 right-5 shadow-md flex flex-col gap-2 justify-center items-center rounded-lg overflow-hidden p-2'
       )}
     >
-      <div className="absolute bg-accent/30 backdrop-blur-sm top-0 left-0 w-full h-full"></div>
-      <Accordion
-        className="relative z-10"
-        type="single"
-        collapsible={stage !== 'results'}
-        defaultValue="players"
-      >
+      <Accordion className="relative z-20" type="single" collapsible>
         <AccordionItem value="players">
           <AccordionTrigger className="px-2 mx-1 w-[23rem]">
-            Players
+            <div className="flex items-center gap-2">
+              <span>Players</span>
+              <Users className="w-5 h-5" />
+            </div>
           </AccordionTrigger>
-          <AccordionContent>
+          <AccordionContent className="mt-1">
             <ul className="p-1 flex flex-col gap-2 justify-center items-center">
               {lobbyPlayers.map((player, index, arr) => {
                 const pointsOfPlayer = player.points
@@ -88,6 +83,6 @@ export default function AccordionLobbyPlayers() {
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-    </div>
+    </Card>
   )
 }

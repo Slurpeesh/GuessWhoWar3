@@ -10,6 +10,7 @@ import {
 } from '@/app/store/slices/roundSlice'
 import { setRole } from '@/app/store/slices/userSlice'
 import AccordionLobbyPlayers from '@/features/AccordionLobbyPlayers/AccordionLobbyPlayers'
+import LobbyPlayers from '@/features/LobbyPlayers/LobbyPlayers'
 import {
   Tooltip,
   TooltipContent,
@@ -18,7 +19,14 @@ import {
 } from '@/shared/Tooltip/Tooltip'
 import LobbyChat from '@/widgets/LobbyChat/LobbyChat'
 import UnitToggleGroup from '@/widgets/UnitToggleGroup/UnitToggleGroup'
-import { AudioLines, Copy, CopyCheck, LogOut } from 'lucide-react'
+import {
+  AudioLines,
+  Copy,
+  CopyCheck,
+  CornerUpLeft,
+  LogOut,
+  Play,
+} from 'lucide-react'
 import {
   LegacyRef,
   MutableRefObject,
@@ -190,7 +198,10 @@ export default function Lobby() {
         <p>Leave</p>
         <LogOut />
       </button>
-      <LobbyChat ref={scrollAreaRef} className="absolute bottom-5 left-5" />
+      <LobbyChat
+        ref={scrollAreaRef}
+        className="absolute z-20 bottom-5 left-5"
+      />
       {round.started && (
         <div className="relative z-10">
           <p className="text-xl font-bold text-center">
@@ -210,7 +221,10 @@ export default function Lobby() {
           Round: {round.currentRound}
         </p>
       )}
-      {lobbyPlayers.length !== 0 && <AccordionLobbyPlayers />}
+      {lobbyPlayers.length !== 0 && stage !== 'results' && (
+        <AccordionLobbyPlayers />
+      )}
+      {lobbyPlayers.length !== 0 && stage === 'results' && <LobbyPlayers />}
       {stage === 'lobby' && (
         <TooltipProvider>
           <Tooltip open={copied ? true : undefined}>
@@ -231,18 +245,20 @@ export default function Lobby() {
       )}
       {user.role === 'host' && stage === 'lobby' && (
         <button
-          className="relative z-10 bg-success hover:bg-success-hover transition-colors p-2 rounded-lg"
+          className="relative z-10 flex items-center gap-2 bg-success hover:bg-success-hover transition-colors p-2 rounded-lg"
           onClick={() => onStart()}
         >
-          Start
+          <span>Start</span>
+          <Play className="w-5 h-5" />
         </button>
       )}
       {user.role === 'host' && stage === 'results' && (
         <button
-          className="relative z-10 bg-success hover:bg-success-hover transition-colors p-2 rounded-lg"
+          className="relative z-10 flex items-center gap-2 bg-success hover:bg-success-hover transition-colors p-2 rounded-lg"
           onClick={() => onToLobby()}
         >
-          To lobby
+          <CornerUpLeft className="w-5 h-5" />
+          <span>To lobby</span>
         </button>
       )}
       {stage === 'results' && user.role === 'player' && (

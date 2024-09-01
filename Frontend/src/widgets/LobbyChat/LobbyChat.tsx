@@ -1,6 +1,7 @@
 import { useAppSelector } from '@/app/hooks/useActions'
 import { cn } from '@/app/lib/utils'
 import { socket } from '@/app/socket'
+import Card from '@/entities/Card/Card'
 import LobbyChatForm from '@/features/LobbyChatForm/LobbyChatForm'
 import { ScrollArea } from '@/shared/ScrollArea/ScrollArea'
 import { forwardRef, LegacyRef } from 'react'
@@ -20,10 +21,6 @@ const LobbyChat = forwardRef(function LobbyChat(
       <ScrollArea ref={ref} className={cn('w-80 h-40 rounded-md pr-4')}>
         <ul className="text-sm">
           {messages.map((message, index, arr) => {
-            console.log(message.senderId === socket.id)
-            const messageClassName = cn(
-              'p-2 my-1 rounded-lg w-2/3 break-all bg-accent/30 backdrop-blur-sm transition-colors'
-            )
             return (
               <div
                 className={cn('flex justify-between items-center', {
@@ -31,10 +28,14 @@ const LobbyChat = forwardRef(function LobbyChat(
                 })}
                 key={index}
               >
-                <li className={messageClassName}>
-                  <span className="font-semibold">{message.senderName}: </span>
-                  {message.value}
-                </li>
+                <Card className="p-2 my-1 rounded-lg w-2/3 break-all">
+                  <li className="relative z-10">
+                    <span className="font-semibold">
+                      {message.senderName}:{' '}
+                    </span>
+                    <span>{message.value}</span>
+                  </li>
+                </Card>
               </div>
             )
           })}
