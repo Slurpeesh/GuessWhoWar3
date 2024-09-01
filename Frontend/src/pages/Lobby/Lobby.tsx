@@ -9,6 +9,7 @@ import {
   setTimeLeft,
 } from '@/app/store/slices/roundSlice'
 import { setRole } from '@/app/store/slices/userSlice'
+import AccordionLobbyPlayers from '@/features/AccordionLobbyPlayers/AccordionLobbyPlayers'
 import {
   Tooltip,
   TooltipContent,
@@ -16,7 +17,6 @@ import {
   TooltipTrigger,
 } from '@/shared/Tooltip/Tooltip'
 import LobbyChat from '@/widgets/LobbyChat/LobbyChat'
-import LobbyPlayers from '@/widgets/LobbyPlayers/LobbyPlayers'
 import UnitToggleGroup from '@/widgets/UnitToggleGroup/UnitToggleGroup'
 import { AudioLines, Copy, CopyCheck, LogOut } from 'lucide-react'
 import {
@@ -210,7 +210,7 @@ export default function Lobby() {
           Round: {round.currentRound}
         </p>
       )}
-      {lobbyPlayers.length !== 0 && <LobbyPlayers />}
+      {lobbyPlayers.length !== 0 && <AccordionLobbyPlayers />}
       {stage === 'lobby' && (
         <TooltipProvider>
           <Tooltip open={copied ? true : undefined}>
