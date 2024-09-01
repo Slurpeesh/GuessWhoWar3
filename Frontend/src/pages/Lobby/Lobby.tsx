@@ -11,30 +11,11 @@ import {
 import { setRole } from '@/app/store/slices/userSlice'
 import AccordionLobbyPlayers from '@/features/AccordionLobbyPlayers/AccordionLobbyPlayers'
 import LobbyPlayers from '@/features/LobbyPlayers/LobbyPlayers'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/shared/Tooltip/Tooltip'
+import ShareCopyButton from '@/features/ShareCopyButton/ShareCopyButton'
 import LobbyChat from '@/widgets/LobbyChat/LobbyChat'
 import UnitToggleGroup from '@/widgets/UnitToggleGroup/UnitToggleGroup'
-import {
-  AudioLines,
-  Copy,
-  CopyCheck,
-  CornerUpLeft,
-  LogOut,
-  Play,
-} from 'lucide-react'
-import {
-  LegacyRef,
-  MutableRefObject,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { AudioLines, CornerUpLeft, LogOut, Play } from 'lucide-react'
+import { LegacyRef, MutableRefObject, useEffect, useMemo, useRef } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 
 export default function Lobby() {
@@ -42,15 +23,11 @@ export default function Lobby() {
   const round = useAppSelector((state) => state.round.value)
   const volume = useAppSelector((state) => state.volume.value)
   const stage = useAppSelector((state) => state.stage.value)
-  const roomConfig = useAppSelector((state) => state.roomConfig.value)
   const user = useAppSelector((state) => state.user.value)
   const roundCount: MutableRefObject<NodeJS.Timeout> = useRef(null)
   const count: MutableRefObject<number> = useRef(round.timeLeft)
   const roundSound: MutableRefObject<HTMLAudioElement> = useRef(null)
   const leaveButtonRef: MutableRefObject<HTMLButtonElement> = useRef(null)
-  const [copied, setCopied] = useState(false)
-  const timeoutID: MutableRefObject<ReturnType<typeof setTimeout>> =
-    useRef(undefined)
   const scrollAreaRef: LegacyRef<HTMLDivElement> = useOutletContext()
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -165,15 +142,6 @@ export default function Lobby() {
     dispatch(setChosenUnit(''))
   }
 
-  function onCopyButtonClick() {
-    navigator.clipboard.writeText(roomConfig.id)
-    setCopied(true)
-    if (timeoutID.current) {
-      clearTimeout(timeoutID.current)
-    }
-    timeoutID.current = setTimeout(() => setCopied(false), 3000)
-  }
-
   function onStart() {
     socket.emit('startGame')
   }
@@ -225,24 +193,7 @@ export default function Lobby() {
         <AccordionLobbyPlayers />
       )}
       {lobbyPlayers.length !== 0 && stage === 'results' && <LobbyPlayers />}
-      {stage === 'lobby' && (
-        <TooltipProvider>
-          <Tooltip open={copied ? true : undefined}>
-            <TooltipTrigger className="relative z-10" asChild>
-              <button
-                className="rounded-md p-1 bg-muted flex justify-center items-center gap-2 font-bold"
-                onClick={() => onCopyButtonClick()}
-              >
-                <p className="uppercase">Share: {roomConfig.id}</p>
-                {copied ? <CopyCheck /> : <Copy />}
-              </button>
-            </TooltipTrigger>
-            <TooltipContent className="relative z-10">
-              <div>{copied ? 'Copied!' : 'Copy'}</div>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      )}
+      {stage === 'lobby' && <ShareCopyButton />}
       {user.role === 'host' && stage === 'lobby' && (
         <button
           className="relative z-10 flex items-center gap-2 bg-success hover:bg-success-hover transition-colors p-2 rounded-lg"
