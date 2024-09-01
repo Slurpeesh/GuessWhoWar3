@@ -170,24 +170,26 @@ export default function Lobby() {
         ref={scrollAreaRef}
         className="absolute z-20 bottom-5 left-5"
       />
-      {round.started && (
+      {stage === 'game' && (
         <div className="relative z-10">
           <p className="text-xl font-bold text-center">
-            Time left: {round.timeLeft}
+            Round: {round.currentRound}
           </p>
-          <button
-            onClick={() => repeatSoundForRound()}
-            className="bg-alert p-2 rounded-lg flex justify-between items-center gap-2"
-          >
-            <p>Repeat sound</p>
-            <AudioLines />
-          </button>
+          {round.started && (
+            <>
+              <p className="text-xl font-bold text-center">
+                Time left: {round.timeLeft}
+              </p>
+              <button
+                onClick={() => repeatSoundForRound()}
+                className="bg-alert p-2 rounded-lg flex justify-between items-center gap-2"
+              >
+                <p>Repeat sound</p>
+                <AudioLines />
+              </button>
+            </>
+          )}
         </div>
-      )}
-      {stage === 'game' && (
-        <p className="relative z-10 text-xl font-bold">
-          Round: {round.currentRound}
-        </p>
       )}
       {lobbyPlayers.length !== 0 && stage !== 'results' && (
         <AccordionLobbyPlayers />

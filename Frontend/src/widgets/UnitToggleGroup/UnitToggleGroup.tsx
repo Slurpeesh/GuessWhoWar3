@@ -31,7 +31,7 @@ export default function UnitToggleGroup() {
             <ToggleGroupItem
               key={index}
               value={value}
-              className="w-16 h-16 p-0"
+              className="w-12 h-12 lg:w-16 lg:h-16 p-0"
             >
               <img
                 className={cn('grayscale hover:grayscale-0', {
