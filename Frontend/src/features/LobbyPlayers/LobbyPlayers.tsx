@@ -14,7 +14,7 @@ export default function LobbyPlayers() {
         'relative z-20 shadow-md flex flex-col gap-2 justify-center items-center rounded-lg overflow-hidden p-2'
       )}
     >
-      <ul className="relative z-20 p-1 flex flex-col gap-2 justify-center items-center">
+      <ul className="relative z-20 p-0 md:p-1 flex flex-col gap-2 justify-center items-center text-sm md:text-base">
         {lobbyPlayers.map((player, index, arr) => {
           const pointsOfPlayer = player.points
           let isWinner: boolean = true
@@ -53,13 +53,13 @@ export default function LobbyPlayers() {
               )}
               key={index}
             >
-              <span className="w-32 md:w-40 break-all">
+              <span className="w-28 md:w-40 break-all">
                 Name: {player.name}
               </span>
               <span className="w-20 md:w-24 break-words">
                 Role: {player.role}
               </span>
-              <span className="w-16 md:w-20 break-words">
+              <span className="w-14 md:w-20 break-words">
                 Points: {player.points}
               </span>
             </li>

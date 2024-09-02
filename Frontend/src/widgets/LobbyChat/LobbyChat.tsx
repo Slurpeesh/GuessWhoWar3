@@ -15,10 +15,18 @@ const LobbyChat = forwardRef(function LobbyChat(
   ref: LegacyRef<HTMLDivElement>
 ) {
   const messages = useAppSelector((state) => state.messages.value)
+  const device = useAppSelector((state) => state.device.value)
 
   return (
-    <div className={cn('flex flex-col w-40 md:w-80 gap-2', className)}>
-      <ScrollArea ref={ref} className={cn(' h-40 rounded-md pr-4')}>
+    <div
+      className={cn('flex flex-col w-52 md:w-80 gap-2', className, {
+        'w-80': device === 'mobile',
+      })}
+    >
+      <ScrollArea
+        ref={ref}
+        className={cn(' h-40 rounded-md pr-4', { 'h-80': device === 'mobile' })}
+      >
         <ul className="text-sm">
           {messages.map((message, index, arr) => {
             return (

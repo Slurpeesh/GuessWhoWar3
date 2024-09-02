@@ -1,3 +1,5 @@
+import chatMobileModalReducer from '@/app/store/slices/chatMobileModalSlice'
+import deviceReducer from '@/app/store/slices/deviceSlice'
 import errorReducer from '@/app/store/slices/errorSlice'
 import isConnectedReducer from '@/app/store/slices/isConnectedSlice'
 import messagesReducer from '@/app/store/slices/messagesSlice'
@@ -22,6 +24,8 @@ export const store = configureStore({
     round: roundReducer,
     volume: volumeReducer,
     theme: themeReducer,
+    device: deviceReducer,
+    chatMobileModal: chatMobileModalReducer,
   },
 })
 

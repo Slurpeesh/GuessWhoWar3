@@ -7,8 +7,13 @@ import { MutableRefObject, Suspense, useEffect, useRef } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from './hooks/useActions'
 import announceSounds from './lib/announceSounds'
-import { waitAndPlaySound } from './lib/utils'
+import { cn, waitAndPlaySound } from './lib/utils'
 import { socket } from './socket'
+import {
+  defineDevice,
+  mediaDeviceQueriesList,
+  setDevice,
+} from './store/slices/deviceSlice'
 import { hideError, showError } from './store/slices/errorSlice'
 import { setConnected } from './store/slices/isConnectedSlice'
 import { setNullifyPoints, setPlayers } from './store/slices/lobbyPlayers'
@@ -35,6 +40,7 @@ export default function App() {
   const error = useAppSelector((state) => state.error.value)
   const volume = useAppSelector((state) => state.volume.value)
   const round = useAppSelector((state) => state.round.value)
+  const device = useAppSelector((state) => state.device.value)
   const isConnected = useAppSelector((state) => state.isConnected.value)
   const currentRound: MutableRefObject<number> = useRef(round.currentRound)
   const audioForRoundRef: MutableRefObject<HTMLAudioElement> = useRef(null)
@@ -56,6 +62,15 @@ export default function App() {
   }, [volume])
 
   useEffect(() => {
+    const handler = () => {
+      const matches = mediaDeviceQueriesList.map((query) => query.matches)
+      dispatch(setDevice(defineDevice(matches)))
+    }
+    mediaDeviceQueriesList.forEach((query, index) => {
+      if (index !== 1) {
+        query.addEventListener('change', handler)
+      }
+    })
     let soundForRoundController: AbortController = null
     let endSoundController: AbortController = null
     function onConnect() {
@@ -243,6 +258,9 @@ export default function App() {
     socket.connect()
 
     return () => {
+      mediaDeviceQueriesList.forEach((query) => {
+        query.removeEventListener('change', handler)
+      })
       socket.off('connect', onConnect)
       socket.off('disconnect', onDisconnect)
       socket.off('message', onMessage)
@@ -278,8 +296,14 @@ export default function App() {
         <Outlet context={scrollAreaRef} />
       </Suspense>
       {/* {process.env.NODE_ENV === 'development' && <Dev />} */}
-      <SoundVolumeSlider className="absolute bottom-5 right-5 w-40 md:w-60" />
-      <ThemeButton className="absolute z-50 bottom-14 right-5" />
+      {device !== 'mobile' && (
+        <SoundVolumeSlider className="absolute bottom-5 right-5 w-40 md:w-60" />
+      )}
+      <ThemeButton
+        className={cn('absolute z-40 bottom-14 right-3', {
+          'bottom-3': device === 'mobile',
+        })}
+      />
       {!isConnected && (
         <div className="absolute z-50 top-0 left-0 w-dvw h-dvh bg-muted/80 flex flex-col gap-5 justify-center items-center">
           <Loader />

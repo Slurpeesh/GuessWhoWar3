@@ -3,6 +3,7 @@ import announceSounds from '@/app/lib/announceSounds'
 import { bgLobby } from '@/app/lib/imgs'
 import { waitAndPlaySound } from '@/app/lib/utils'
 import { socket } from '@/app/socket'
+import { setChatMobileModal } from '@/app/store/slices/chatMobileModalSlice'
 import {
   setChosenUnit,
   setRoundStarted,
@@ -12,9 +13,16 @@ import { setRole } from '@/app/store/slices/userSlice'
 import AccordionLobbyPlayers from '@/features/AccordionLobbyPlayers/AccordionLobbyPlayers'
 import LobbyPlayers from '@/features/LobbyPlayers/LobbyPlayers'
 import ShareCopyButton from '@/features/ShareCopyButton/ShareCopyButton'
+import Modal from '@/shared/Modal/Modal'
 import LobbyChat from '@/widgets/LobbyChat/LobbyChat'
 import UnitToggleGroup from '@/widgets/UnitToggleGroup/UnitToggleGroup'
-import { AudioLines, CornerUpLeft, LogOut, Play } from 'lucide-react'
+import {
+  AudioLines,
+  CornerUpLeft,
+  LogOut,
+  MessageCircle,
+  Play,
+} from 'lucide-react'
 import { LegacyRef, MutableRefObject, useEffect, useMemo, useRef } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 
@@ -24,6 +32,8 @@ export default function Lobby() {
   const volume = useAppSelector((state) => state.volume.value)
   const stage = useAppSelector((state) => state.stage.value)
   const user = useAppSelector((state) => state.user.value)
+  const device = useAppSelector((state) => state.device.value)
+  const chatMobileModal = useAppSelector((state) => state.chatMobileModal.value)
   const roundCount: MutableRefObject<NodeJS.Timeout> = useRef(null)
   const count: MutableRefObject<number> = useRef(round.timeLeft)
   const roundSound: MutableRefObject<HTMLAudioElement> = useRef(null)
@@ -150,6 +160,11 @@ export default function Lobby() {
     socket.emit('toLobby')
   }
 
+  function onOpenChat() {
+    console.log('Open chat')
+    dispatch(setChatMobileModal(true))
+  }
+
   return (
     <div className="relative flex gap-2 flex-grow flex-col justify-center items-center">
       <div
@@ -166,10 +181,27 @@ export default function Lobby() {
         <p>Leave</p>
         <LogOut />
       </button>
-      <LobbyChat
-        ref={scrollAreaRef}
-        className="absolute z-20 bottom-5 left-5"
-      />
+      {device !== 'mobile' ? (
+        <LobbyChat
+          ref={scrollAreaRef}
+          className="absolute z-20 bottom-5 left-5"
+        />
+      ) : (
+        <button
+          className="absolute z-20 bottom-3 left-3 w-12 h-12 p-2 rounded-full transition-colors hover:bg-muted/30"
+          onClick={() => onOpenChat()}
+          aria-label="Open chat"
+        >
+          <MessageCircle className="h-full w-full stroke-accent" />
+        </button>
+      )}
+
+      {chatMobileModal && (
+        <Modal>
+          <LobbyChat ref={scrollAreaRef} />
+        </Modal>
+      )}
+
       {stage === 'game' && (
         <div className="relative z-10">
           <p className="text-xl font-bold text-center">
