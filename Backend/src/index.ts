@@ -16,7 +16,9 @@ import {
   SocketData,
 } from './types'
 
-const PORT = process.env.PORT || 6122
+const ENV_PORT = Number(process.env.PORT)
+
+const PORT = ENV_PORT || 6122
 
 const directoryPath = path.join(__dirname, '../assets/sounds/')
 

@@ -27,6 +27,7 @@
     --color-accent-hover: 221 83% 53%;
     --color-muted: 0 0% 95%;
     --color-alert: 47 90% 64%;
+    --color-alert-hover: 47 90% 54%;
     --color-danger: 0 72% 61%;
     --color-danger-hover: 0 72% 41%;
     --color-success: 142 71% 45%;
@@ -41,6 +42,7 @@
     --color-accent-hover: 221 83% 63%;
     --color-muted: 0 0% 30%;
     --color-alert: 47 90% 34%;
+    --color-alert-hover: 47 90% 24%;
     --color-danger: 0 72% 41%;
     --color-danger-hover: 0 72% 51%;
     --color-success: 142 71% 25%;

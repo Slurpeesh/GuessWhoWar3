@@ -211,7 +211,7 @@ export default function Lobby() {
                 </p>
                 <button
                   onClick={() => repeatSoundForRound()}
-                  className="bg-alert p-2 rounded-lg flex justify-between items-center gap-2"
+                  className="bg-alert hover:bg-alert-hover p-2 rounded-lg flex justify-between items-center gap-2"
                 >
                   <p>Repeat sound</p>
                   <AudioLines />

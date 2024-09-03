@@ -14,6 +14,7 @@ export default {
         'accent-hover': 'hsl(var(--color-accent-hover) / <alpha-value>)',
         muted: 'hsl(var(--color-muted) / <alpha-value>)',
         alert: 'hsl(var(--color-alert) / <alpha-value>)',
+        'alert-hover': 'hsl(var(--color-alert-hover) / <alpha-value>)',
         danger: 'hsl(var(--color-danger) / <alpha-value>)',
         'danger-hover': 'hsl(var(--color-danger-hover) / <alpha-value>)',
         success: 'hsl(var(--color-success) / <alpha-value>)',

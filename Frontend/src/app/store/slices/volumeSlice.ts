@@ -1,7 +1,9 @@
 import { RootState } from '@/app/store'
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-const volume = Number(localStorage.getItem('volume')) ?? 0.5
+const localStorageVolume = localStorage.getItem('volume')
+
+const volume = localStorageVolume ? Number(localStorageVolume) : 0.5
 
 export interface IVolumeSlice {
   value: number
