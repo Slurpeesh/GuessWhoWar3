@@ -33,8 +33,12 @@ export default function ThemeButton({ className, ...rest }: IThemeButton) {
       }
       {...rest}
     >
-      {theme == 'light' && <Sun className="h-full w-full stroke-accent" />}
-      {theme == 'dark' && <Moon className="h-full w-full stroke-accent" />}
+      {theme == 'light' && (
+        <Sun className="h-full w-full stroke-accent stoke-2" />
+      )}
+      {theme == 'dark' && (
+        <Moon className="h-full w-full stroke-accent stoke-2" />
+      )}
     </button>
   )
 }

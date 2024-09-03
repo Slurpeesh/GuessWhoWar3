@@ -300,7 +300,7 @@ export default function App() {
         <SoundVolumeSlider className="absolute bottom-5 right-5 w-40 md:w-60" />
       )}
       <ThemeButton
-        className={cn('absolute z-40 bottom-14 right-3', {
+        className={cn('fixed z-40 bottom-14 right-3', {
           'bottom-3': device === 'mobile',
         })}
       />

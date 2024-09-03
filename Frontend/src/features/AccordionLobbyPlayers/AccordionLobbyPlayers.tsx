@@ -18,7 +18,7 @@ export default function AccordionLobbyPlayers() {
   return (
     <Card
       className={cn(
-        'absolute z-20 top-5 right-5 shadow-md flex flex-col gap-2 justify-center items-center rounded-lg overflow-hidden p-2'
+        'fixed z-20 top-5 right-5 shadow-md flex flex-col gap-2 justify-center items-center rounded-lg overflow-hidden p-2'
       )}
     >
       <Accordion className="relative z-20" type="single" collapsible>

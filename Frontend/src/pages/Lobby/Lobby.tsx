@@ -161,34 +161,31 @@ export default function Lobby() {
   }
 
   function onOpenChat() {
-    console.log('Open chat')
     dispatch(setChatMobileModal(true))
   }
 
   return (
-    <div className="relative flex gap-2 flex-grow flex-col justify-center items-center">
+    <div className="relative flex flex-grow flex-col justify-center items-center bg-background">
       <div
-        className="absolute right-0 top-0 h-full w-full bg-cover bg-center mix-blend-soft-light"
+        className="fixed right-0 top-0 h-full w-full bg-cover bg-center mix-blend-soft-light"
         style={{
           backgroundImage: `url(${randomBg})`,
         }}
       ></div>
+      <div className="w-full h-20" aria-hidden="true"></div>
       <button
         ref={leaveButtonRef}
-        className="absolute top-5 left-5 flex items-center gap-2 bg-danger hover:bg-danger-hover disabled:bg-muted transition-colors p-2 rounded-lg"
+        className="fixed z-20 top-5 left-5 flex items-center gap-2 bg-danger hover:bg-danger-hover disabled:bg-muted transition-colors p-2 rounded-lg"
         onClick={() => onLeaveButtonHandler()}
       >
         <p>Leave</p>
         <LogOut />
       </button>
       {device !== 'mobile' ? (
-        <LobbyChat
-          ref={scrollAreaRef}
-          className="absolute z-20 bottom-5 left-5"
-        />
+        <LobbyChat ref={scrollAreaRef} className="fixed z-20 bottom-5 left-5" />
       ) : (
         <button
-          className="absolute z-20 bottom-3 left-3 w-12 h-12 p-2 rounded-full transition-colors hover:bg-muted/30"
+          className="fixed z-20 bottom-3 left-3 w-12 h-12 p-2 rounded-full transition-colors hover:bg-muted/30"
           onClick={() => onOpenChat()}
           aria-label="Open chat"
         >
@@ -201,55 +198,59 @@ export default function Lobby() {
           <LobbyChat ref={scrollAreaRef} />
         </Modal>
       )}
-
-      {stage === 'game' && (
-        <div className="relative z-10">
-          <p className="text-xl font-bold text-center">
-            Round: {round.currentRound}
+      <div className="flex-grow flex flex-col gap-2 justify-center items-center px-2">
+        {stage === 'game' && (
+          <div className="relative z-10">
+            <p className="text-xl font-bold text-center">
+              Round: {round.currentRound}
+            </p>
+            {round.started && (
+              <>
+                <p className="text-xl font-bold text-center">
+                  Time left: {round.timeLeft}
+                </p>
+                <button
+                  onClick={() => repeatSoundForRound()}
+                  className="bg-alert p-2 rounded-lg flex justify-between items-center gap-2"
+                >
+                  <p>Repeat sound</p>
+                  <AudioLines />
+                </button>
+              </>
+            )}
+          </div>
+        )}
+        {lobbyPlayers.length !== 0 && stage !== 'results' && (
+          <AccordionLobbyPlayers />
+        )}
+        {lobbyPlayers.length !== 0 && stage === 'results' && <LobbyPlayers />}
+        {stage === 'lobby' && <ShareCopyButton />}
+        {user.role === 'host' && stage === 'lobby' && (
+          <button
+            className="relative z-10 flex items-center gap-2 bg-success hover:bg-success-hover transition-colors p-2 rounded-lg"
+            onClick={() => onStart()}
+          >
+            <span>Start</span>
+            <Play className="w-5 h-5" />
+          </button>
+        )}
+        {user.role === 'host' && stage === 'results' && (
+          <button
+            className="relative z-10 flex items-center gap-2 bg-success hover:bg-success-hover transition-colors p-2 rounded-lg"
+            onClick={() => onToLobby()}
+          >
+            <CornerUpLeft className="w-5 h-5" />
+            <span>To lobby</span>
+          </button>
+        )}
+        {stage === 'results' && user.role === 'player' && (
+          <p className="relative z-10">
+            Waiting for host to return to lobby...
           </p>
-          {round.started && (
-            <>
-              <p className="text-xl font-bold text-center">
-                Time left: {round.timeLeft}
-              </p>
-              <button
-                onClick={() => repeatSoundForRound()}
-                className="bg-alert p-2 rounded-lg flex justify-between items-center gap-2"
-              >
-                <p>Repeat sound</p>
-                <AudioLines />
-              </button>
-            </>
-          )}
-        </div>
-      )}
-      {lobbyPlayers.length !== 0 && stage !== 'results' && (
-        <AccordionLobbyPlayers />
-      )}
-      {lobbyPlayers.length !== 0 && stage === 'results' && <LobbyPlayers />}
-      {stage === 'lobby' && <ShareCopyButton />}
-      {user.role === 'host' && stage === 'lobby' && (
-        <button
-          className="relative z-10 flex items-center gap-2 bg-success hover:bg-success-hover transition-colors p-2 rounded-lg"
-          onClick={() => onStart()}
-        >
-          <span>Start</span>
-          <Play className="w-5 h-5" />
-        </button>
-      )}
-      {user.role === 'host' && stage === 'results' && (
-        <button
-          className="relative z-10 flex items-center gap-2 bg-success hover:bg-success-hover transition-colors p-2 rounded-lg"
-          onClick={() => onToLobby()}
-        >
-          <CornerUpLeft className="w-5 h-5" />
-          <span>To lobby</span>
-        </button>
-      )}
-      {stage === 'results' && user.role === 'player' && (
-        <p className="relative z-10">Waiting for host to return to lobby...</p>
-      )}
-      {stage === 'game' && <UnitToggleGroup />}
+        )}
+        {stage === 'game' && <UnitToggleGroup />}
+      </div>
+      <div className="w-full h-[4.5rem]" aria-hidden="true"></div>
     </div>
   )
 }
