@@ -5,6 +5,7 @@ interface IMessage {
   senderId: string
   senderName: string
   value: string
+  isSeen: boolean
 }
 
 export interface IMessagesSlice {
@@ -25,9 +26,12 @@ export const messagesSlice = createSlice({
     deleteMessages: (state) => {
       state.value = []
     },
+    setAllSeen: (state) => {
+      state.value.forEach((value) => (value.isSeen = true))
+    },
   },
 })
 
-export const { addMessage, deleteMessages } = messagesSlice.actions
+export const { addMessage, deleteMessages, setAllSeen } = messagesSlice.actions
 export const selectMessages = (state: RootState) => state.messages.value
 export default messagesSlice.reducer

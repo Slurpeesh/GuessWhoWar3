@@ -72,7 +72,7 @@ export default function AccordionLobbyPlayers() {
                     <span className="w-24 md:w-40 break-all">
                       Name: {player.name}
                     </span>
-                    <span className="w-16 md:w-24 break-words">
+                    <span className="w-20 md:w-24 break-words">
                       Role: {player.role}
                     </span>
                     <span className="w-16 md:w-20 break-words">

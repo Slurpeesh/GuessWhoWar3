@@ -42,6 +42,7 @@ export default function App() {
   const round = useAppSelector((state) => state.round.value)
   const device = useAppSelector((state) => state.device.value)
   const isConnected = useAppSelector((state) => state.isConnected.value)
+  const chatMobileModal = useAppSelector((state) => state.chatMobileModal.value)
   const currentRound: MutableRefObject<number> = useRef(round.currentRound)
   const audioForRoundRef: MutableRefObject<HTMLAudioElement> = useRef(null)
   const endAudRef: MutableRefObject<HTMLAudioElement> = useRef(endAud)
@@ -83,17 +84,21 @@ export default function App() {
     }
 
     function onMessage(value: string, senderId: string, senderName: string) {
-      dispatch(addMessage({ value, senderId, senderName }))
-      const isAtBottom =
-        Math.abs(
-          scrollAreaRef.current.scrollHeight -
-            scrollAreaRef.current.scrollTop -
-            scrollAreaRef.current.clientHeight
-        ) < 60
-      if (isAtBottom || senderId === socket.id) {
-        setTimeout(() => {
-          scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
-        })
+      dispatch(
+        addMessage({ value, senderId, senderName, isSeen: chatMobileModal })
+      )
+      if (scrollAreaRef.current) {
+        const isAtBottom =
+          Math.abs(
+            scrollAreaRef.current.scrollHeight -
+              scrollAreaRef.current.scrollTop -
+              scrollAreaRef.current.clientHeight
+          ) < 60
+        if (isAtBottom || senderId === socket.id) {
+          setTimeout(() => {
+            scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+          })
+        }
       }
     }
 

@@ -13,8 +13,8 @@ import { setRole } from '@/app/store/slices/userSlice'
 import AccordionLobbyPlayers from '@/features/AccordionLobbyPlayers/AccordionLobbyPlayers'
 import LobbyPlayers from '@/features/LobbyPlayers/LobbyPlayers'
 import ShareCopyButton from '@/features/ShareCopyButton/ShareCopyButton'
-import Modal from '@/shared/Modal/Modal'
 import LobbyChat from '@/widgets/LobbyChat/LobbyChat'
+import MobileModalChat from '@/widgets/MobileModalChat/MobileModalChat'
 import UnitToggleGroup from '@/widgets/UnitToggleGroup/UnitToggleGroup'
 import {
   AudioLines,
@@ -32,6 +32,7 @@ export default function Lobby() {
   const volume = useAppSelector((state) => state.volume.value)
   const stage = useAppSelector((state) => state.stage.value)
   const user = useAppSelector((state) => state.user.value)
+  const messages = useAppSelector((state) => state.messages.value)
   const device = useAppSelector((state) => state.device.value)
   const chatMobileModal = useAppSelector((state) => state.chatMobileModal.value)
   const roundCount: MutableRefObject<NodeJS.Timeout> = useRef(null)
@@ -56,6 +57,10 @@ export default function Lobby() {
     const bgKeys = Object.keys(bgLobby) as Array<keyof typeof bgLobby>
     return bgLobby[bgKeys[Math.floor(Math.random() * bgKeys.length)]]
   }, [])
+
+  const unseenMessages = useMemo(() => {
+    return messages.filter((message) => !message.isSeen)
+  }, [messages])
 
   useEffect(() => {
     if (stage === 'init') {
@@ -190,14 +195,15 @@ export default function Lobby() {
           aria-label="Open chat"
         >
           <MessageCircle className="h-full w-full stroke-accent" />
+          {unseenMessages.length !== 0 && (
+            <div className="absolute top-2 right-1 w-5 aspect-square rounded-full bg-danger text-xs font-semibold text-center content-center">
+              {unseenMessages.length < 10 ? unseenMessages.length : '9+'}
+            </div>
+          )}
         </button>
       )}
 
-      {chatMobileModal && (
-        <Modal>
-          <LobbyChat ref={scrollAreaRef} />
-        </Modal>
-      )}
+      {chatMobileModal && <MobileModalChat ref={scrollAreaRef} />}
       <div className="flex-grow flex flex-col gap-2 justify-center items-center px-2">
         {stage === 'game' && (
           <div className="relative z-10">
