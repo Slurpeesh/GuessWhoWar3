@@ -51,6 +51,8 @@ export interface ServerToClientEvents {
     clients: Array<IPlayer>
   ) => void
   transferToLobby: () => void
+  playerLeft: (name: string, reason: 'left' | 'disconnected') => void
+  playerJoined: (name: string) => void
 }
 
 export interface ClientToServerEvents {

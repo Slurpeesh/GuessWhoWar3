@@ -36,11 +36,26 @@ const LobbyChat = forwardRef(function LobbyChat(
                 })}
                 key={index}
               >
-                <Card className="p-2 my-1 rounded-lg w-2/3 break-all">
-                  <li className="relative z-10">
-                    <span className="font-semibold">
-                      {message.senderName}:{' '}
-                    </span>
+                <Card
+                  className={cn('p-2 my-1 rounded-lg w-2/3 break-all', {
+                    'w-full': message.senderId === '-1',
+                  })}
+                  innerClassName={message.senderId === '-1' && 'bg-muted/50'}
+                >
+                  <li
+                    className={cn('relative z-10', {
+                      'text-center': message.senderId === '-1',
+                    })}
+                  >
+                    {message.senderId === '-1' ? (
+                      <span className="font-semibold">
+                        {message.senderName}{' '}
+                      </span>
+                    ) : (
+                      <span className="font-semibold">
+                        {message.senderName}:{' '}
+                      </span>
+                    )}
                     <span>{message.value}</span>
                   </li>
                 </Card>

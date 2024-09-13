@@ -7,9 +7,15 @@ interface ICard
     HTMLDivElement
   > {
   className?: string
+  innerClassName?: string
 }
 
-export default function Card({ className, children, ...rest }: ICard) {
+export default function Card({
+  className,
+  innerClassName,
+  children,
+  ...rest
+}: ICard) {
   return (
     <div
       className={cn(
@@ -18,7 +24,12 @@ export default function Card({ className, children, ...rest }: ICard) {
       )}
       {...rest}
     >
-      <div className="absolute bg-accent/30 backdrop-blur-sm top-0 left-0 w-full h-full"></div>
+      <div
+        className={cn(
+          'absolute bg-accent/30 backdrop-blur-sm top-0 left-0 w-full h-full',
+          innerClassName
+        )}
+      ></div>
       {children}
     </div>
   )

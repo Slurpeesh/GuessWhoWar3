@@ -200,7 +200,6 @@ export default function App() {
       guesses: Array<IGuesses>,
       clients: Array<IPlayer>
     ) {
-      // console.log(rightAnswer)
       let isDissapointed: boolean = true
       clients.forEach((client) => {
         if (client.points > 0) {
@@ -245,6 +244,54 @@ export default function App() {
       dispatch(setStage('lobby'))
     }
 
+    function onPlayerJoined(name: string) {
+      dispatch(
+        addMessage({
+          senderId: '-1',
+          senderName: name,
+          value: 'joined',
+          isSeen: chatMobileModal,
+        })
+      )
+      if (scrollAreaRef.current) {
+        const isAtBottom =
+          Math.abs(
+            scrollAreaRef.current.scrollHeight -
+              scrollAreaRef.current.scrollTop -
+              scrollAreaRef.current.clientHeight
+          ) < 60
+        if (isAtBottom) {
+          setTimeout(() => {
+            scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+          })
+        }
+      }
+    }
+
+    function onPlayerLeft(name: string, reason: 'left' | 'disconnected') {
+      dispatch(
+        addMessage({
+          senderId: '-1',
+          senderName: name,
+          value: reason,
+          isSeen: chatMobileModal,
+        })
+      )
+      if (scrollAreaRef.current) {
+        const isAtBottom =
+          Math.abs(
+            scrollAreaRef.current.scrollHeight -
+              scrollAreaRef.current.scrollTop -
+              scrollAreaRef.current.clientHeight
+          ) < 60
+        if (isAtBottom) {
+          setTimeout(() => {
+            scrollAreaRef.current.scrollTop = scrollAreaRef.current.scrollHeight
+          })
+        }
+      }
+    }
+
     socket.on('connect', onConnect)
     socket.on('disconnect', onDisconnect)
     socket.on('message', onMessage)
@@ -259,6 +306,8 @@ export default function App() {
     socket.on('soundForRound', onSoundForRound)
     socket.on('roundEnd', onRoundEnd)
     socket.on('transferToLobby', onTransferToLobby)
+    socket.on('playerJoined', onPlayerJoined)
+    socket.on('playerLeft', onPlayerLeft)
 
     socket.connect()
 
@@ -280,6 +329,8 @@ export default function App() {
       socket.off('soundForRound', onSoundForRound)
       socket.off('roundEnd', onRoundEnd)
       socket.off('transferToLobby', onTransferToLobby)
+      socket.off('playerJoined', onPlayerJoined)
+      socket.off('playerLeft', onPlayerLeft)
     }
   }, [])
 

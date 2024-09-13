@@ -59,15 +59,16 @@ io.on('connection', (socket) => {
           io.to(roomId).emit('playerData', [])
           io.in(roomId).socketsLeave(roomId)
           rooms.delete(roomId)
-        } else {
+        } else if (client) {
           let clients = room.clients
           room.clients = clients.filter((client) => {
             if (client) return client.id !== socket.id
           })
           clients = room.clients
-          io.to(roomId).emit('playerData', clients)
-          socket.emit('playerData', [])
           socket.leave(roomId)
+          io.to(roomId).emit('playerData', clients)
+          io.to(roomId).emit('playerLeft', client.name, 'disconnected')
+          socket.emit('playerData', [])
         }
       }
     }
@@ -129,7 +130,8 @@ io.on('connection', (socket) => {
       socket.data.room = roomId
       socket.join(roomId)
       io.to(roomId).emit('playerData', clients)
-      io.to(roomId).emit('roomConfig', { id: roomId, maxPlayers, rounds })
+      io.to(roomId).emit('playerJoined', name)
+      socket.emit('roomConfig', { id: roomId, maxPlayers, rounds })
       socket.emit('stageConfirm', 'lobby')
     }
   })
@@ -141,14 +143,19 @@ io.on('connection', (socket) => {
       io.in(roomId).socketsLeave(roomId)
       rooms.delete(roomId)
     } else {
-      let clients = rooms.get(roomId)!.clients
-      rooms.get(roomId)!.clients = clients.filter((client) => {
-        if (client) return client.id !== userId
-      })
-      clients = rooms.get(roomId)!.clients
-      io.to(roomId).emit('playerData', clients)
-      socket.emit('playerData', [])
-      socket.leave(roomId)
+      const room = rooms.get(roomId)
+      if (room !== undefined) {
+        let clients = rooms.get(roomId)!.clients
+        const client = room.clients.find((client) => client.id === socket.id)!
+        rooms.get(roomId)!.clients = clients.filter((client) => {
+          if (client) return client.id !== userId
+        })
+        clients = rooms.get(roomId)!.clients
+        socket.leave(roomId)
+        io.to(roomId).emit('playerData', clients)
+        io.to(roomId).emit('playerLeft', client.name, 'left')
+        socket.emit('playerData', [])
+      }
     }
     socket.data.room = socket.id
   })
