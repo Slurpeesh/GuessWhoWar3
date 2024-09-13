@@ -15,7 +15,7 @@ export default function EntryPage() {
               return [
                 'p-2 rounded-lg w-52 text-center text-foreground-within-accent',
                 isActive
-                  ? 'bg-accent-hover'
+                  ? 'bg-accent-hover pointer-events-none'
                   : 'bg-accent hover:bg-accent-hover transition-colors',
               ].join(' ')
             }}
@@ -28,7 +28,7 @@ export default function EntryPage() {
               return [
                 'p-2 rounded-lg w-52 text-center text-foreground-within-accent',
                 isActive
-                  ? 'bg-accent-hover'
+                  ? 'bg-accent-hover pointer-events-none'
                   : 'bg-accent hover:bg-accent-hover transition-colors',
               ].join(' ')
             }}

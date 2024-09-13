@@ -18,9 +18,9 @@ export default function ErrorPage() {
   const errorMsg = errorMessage(error)
 
   return (
-    <div className="h-dvh w-dvw bg-background flex flex-col gap-5 justify-center items-center text-3xl">
+    <div className="h-dvh w-dvw bg-background text-foreground p-5 flex flex-col gap-5 justify-center items-center text-3xl">
       <h1>Oops!</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
+      <p className="text-center">Sorry, an unexpected error has occurred.</p>
       <p className="font-bold text-4xl">{errorMsg}</p>
     </div>
   )
