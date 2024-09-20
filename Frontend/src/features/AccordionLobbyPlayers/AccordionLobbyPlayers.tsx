@@ -13,6 +13,7 @@ import { Users } from 'lucide-react'
 export default function AccordionLobbyPlayers() {
   const user = useAppSelector((state) => state.user.value)
   const stage = useAppSelector((state) => state.stage.value)
+  const device = useAppSelector((state) => state.device.value)
   const lobbyPlayers = useAppSelector((state) => state.lobbyPlayers.value)
 
   return (
@@ -21,7 +22,12 @@ export default function AccordionLobbyPlayers() {
         'fixed z-20 top-5 right-5 shadow-md flex flex-col gap-2 justify-center items-center rounded-lg overflow-hidden p-2'
       )}
     >
-      <Accordion className="relative z-20" type="single" collapsible>
+      <Accordion
+        className="relative z-20"
+        type="single"
+        defaultValue={device !== 'mobile' && 'players'}
+        collapsible
+      >
         <AccordionItem value="players">
           <AccordionTrigger className="px-2 mx-1 w-32 md:w-[23rem]">
             <div className="flex items-center gap-2">
