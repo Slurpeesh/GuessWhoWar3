@@ -245,7 +245,6 @@ export default function App() {
     }
 
     function onPlayerJoined(name: string) {
-      console.log(name, 'joined')
       dispatch(
         addMessage({
           senderId: '-1',
@@ -270,7 +269,6 @@ export default function App() {
     }
 
     function onPlayerLeft(name: string, reason: 'left' | 'disconnected') {
-      console.log(name, reason)
       dispatch(
         addMessage({
           senderId: '-1',

@@ -83,7 +83,7 @@ export default function HostPage() {
             Your name:
           </label>
           <input
-            className="col-span-2 ml-2 rounded-md p-1 bg-muted"
+            className="col-span-2 ml-2 rounded-md p-1 bg-muted autofill:!bg-red-500"
             id="name"
             type="text"
             value={user.name}
